@@ -21,7 +21,7 @@ Then T6 `check` + Markdown reporter, T7 demo repo.
 ## Gotchas
 - Never run real `bob` unless asked. Run Bob tasks with `zsh -ic 'scripts/bob-task.sh <taskNN-name> <prompt-file> [mode] [maxCost] [maxTurns]'` (the key lives in `~/.zshrc`; plain shells don't see it). Never print/commit the key.
 - Bob works tests-first: Claude writes contract + fixtures + red tests, Bob implements. Double-check every expected value against fixtures first (task 03 burnt 2.08 on a wrong expectation). Tell Bob to run only the target test file while iterating.
-- After each Bob task: the user drops the Bob IDE task-summary screenshot into `../shots/`; move it to `bob_sessions/kairos_taskNN_<desc>.png`, link it in `bob_sessions/README.md`, commit. Don't press "Continue Task" on capped tasks.
+- Screenshots (required evidence, only for tasks Bob ran): after each Bob run, remind the user in chat with the task number, prompt title and `task_id` (Bob IDE → Tasks → All → open the task → click its header). The user drops the PNG into `../shots/`; view it, check task id and that no secrets are visible, move it to `bob_sessions/kairos_taskNN_<desc>.png` (glob the filename: macOS uses a special space), add/link its row in `bob_sessions/README.md`, commit. Next Bob task number: 04. Tell the user not to press "Continue Task" on capped tasks.
 - Everything in the repo is English (judges). Chat with the user in Russian.
 - Bob CLI flag is `--mode`, not `--chat-mode`.
 - `pnpm test` must stay green at every commit, so tests + implementation land together.
