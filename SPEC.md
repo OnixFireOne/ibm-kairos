@@ -46,6 +46,8 @@ A new chat with any of them starts with "continue" and nothing else.
 
 This closes the loop: **spec → plan → work (docs auto-updated) → handoff → new session continues → drift check keeps code and docs honest.**
 
+**Why not rely on built-in context compaction?** Assistants compact or summarise long chats automatically, but that is lossy and opaque: the model decides what survives, at the moment the context overflows, inside one tool. Kairos docs are explicit, written at the end of each task, reviewable and editable in git, shared by every agent (Bob, Claude, Codex), versioned, and checked for staleness by `kairos check`. Compaction saves space; Kairos gives control.
+
 **Dogfooding:** Kairos itself is built this way. The repo has `HANDOFF.md`, `PLAN.md` with statuses and `docs/tasks/T00…` files; every new session (Claude Code or Bob) started from "continue". This is shown in the demo and the README as evidence the workflow saves context and keeps docs current.
 
 ## 2.2 Fit with the official challenge
