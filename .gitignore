@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.DS_Store
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# kairos runtime
+.kairos/cache/
+.kairos/runs/

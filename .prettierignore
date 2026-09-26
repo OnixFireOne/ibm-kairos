@@ -1,0 +1,5 @@
+pnpm-lock.yaml
+dist/
+bob_sessions/
+fixtures/
+*.md
