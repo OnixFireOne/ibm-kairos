@@ -30,9 +30,10 @@ The way I already work with AI: the project keeps a `docs/` folder that the mode
 | `PLAN.md` | tasks with status `[ ] [~] [x]` | Bob updates it as tasks complete |
 | `PROGRESS.md` | append-only dev log: date, what changed, files, why | Bob after each task + a `post-commit` hook (deterministic) |
 | `DECISIONS.md` | decisions and trade-offs, including drift resolutions from `kairos fix` | Bob / `kairos fix` |
+| `tasks/TNN-<slug>.md` | one file per task: Goal, Spec, Decisions, Problems, Result. Keeps task detail out of `SPEC.md`, so a session reads only the task at hand | Bob when a task starts and ends |
 | `HANDOFF.md` | snapshot for the next session: state, in-progress item, next step, gotchas, files to read first | Bob at the end of a session or on a "new chat" recommendation |
 
-**How any model picks it up automatically:** `kairos init` adds a short pointer ("Before any work read `docs/kairos/HANDOFF.md`, then `SPEC.md` and `PLAN.md`. After each task update `PLAN`/`PROGRESS`.") where each agent looks by default:
+**How any model picks it up automatically:** `kairos init` adds a short pointer ("Before any work read `docs/kairos/HANDOFF.md`, then the current task file, `PLAN.md` and the `SPEC.md` sections you need. After each task update the task file, `PLAN`/`PROGRESS`.") where each agent looks by default:
 - **Bob:** the `kairos-dev` custom mode's instructions (and `.bob/rules/`, if supported).
 - **Claude Code:** `CLAUDE.md`. **Codex and others:** `AGENTS.md`.
 
@@ -45,6 +46,8 @@ A new chat with any of them starts with "continue" and nothing else.
 
 This closes the loop: **spec → plan → work (docs auto-updated) → handoff → new session continues → drift check keeps code and docs honest.**
 
+**Dogfooding:** Kairos itself is built this way. The repo has `HANDOFF.md`, `PLAN.md` with statuses and `docs/tasks/T00…` files; every new session (Claude Code or Bob) started from "continue". This is shown in the demo and the README as evidence the workflow saves context and keeps docs current.
+
 ## 2.2 Fit with the official challenge
 Guide theme: *"Build with purpose using IBM Bob 2.0"*. The ask is a functional prototype that improves a developer workflow (onboarding, debugging, code review, testing, maintenance, deployment) where "time, effort, or errors are too high today", with **measurable productivity gains**, using Bob 2.0 features such as Agent mode, parallel tasks, subagents and document understanding.
 
@@ -54,7 +57,7 @@ Kairos targets **code review + maintenance + onboarding**, and the demo measures
 | Drift caught before merge | 3/3 seeded drifts found, 0 false positives on the control commit |
 | Time to resolve a drift | manual (stopwatch, docs + test by hand) vs `kairos fix` |
 | Docs kept current | PLAN/PROGRESS/DECISIONS entries written automatically per task (count) |
-| Session restart cost | context the new session needs: HANDOFF (≤3k chars) vs re-reading repo + chat; turns to resume |
+| Session restart cost | context the new session needs: HANDOFF (≤3k chars) + one task file vs re-reading repo + chat; turns to resume |
 | Bobcoins per check | from the Bob task consumption summary + cache hits at 0 |
 
 ## 3. Why IBM Bob is the core (eligibility)
@@ -88,7 +91,7 @@ Kairos targets **code review + maintenance + onboarding**, and the demo measures
 - `kairos init`: scaffold config + the Bob mode file.
 - `kairos check`: diff → context → Bob → Drift Report (JSON + Markdown), with an exit code.
 - `kairos fix --id <finding>`: Bob applies the fix for one finding (docs/tests only by default) and appends the decision to `decisions.md`.
-- `kairos init` also scaffolds `docs/kairos/` (SPEC, PLAN, PROGRESS, DECISIONS, HANDOFF) and the agent pointers (`CLAUDE.md`, `AGENTS.md`, the Bob mode).
+- `kairos init` also scaffolds `docs/kairos/` (SPEC, PLAN, PROGRESS, DECISIONS, HANDOFF, `tasks/`) and the agent pointers (`CLAUDE.md`, `AGENTS.md`, the Bob mode).
 - `kairos-dev` Bob mode: works on tasks and auto-updates the docs; writes `HANDOFF.md` and recommends a new chat at a milestone or over budget.
 - `kairos handoff`: generates or refreshes `HANDOFF.md` from the git log + docs + the last report (for sessions that ended abruptly).
 - A `post-commit` hook appends commit entries to `PROGRESS.md` (no LLM).
@@ -190,9 +193,11 @@ customModes:
       You are a spec-driven developer. The source of truth is docs/kairos/. You keep it current
       so that any model can continue your work in a new session without the chat history.
     customInstructions: |-
-      - Start: read docs/kairos/HANDOFF.md, then SPEC.md and PLAN.md. Summarise the state in 3 lines.
-      - After each completed task: mark it in PLAN.md, append to PROGRESS.md (date, what, files, why),
-        record non-obvious choices in DECISIONS.md.
+      - Start: read docs/kairos/HANDOFF.md, then the current task file in docs/kairos/tasks/, PLAN.md
+        and only the SPEC.md sections you need. Summarise the state in 3 lines.
+      - When a task starts, create docs/kairos/tasks/TNN-<slug>.md (Goal, Spec, Decisions, Problems, Result).
+      - After each completed task: fill its task file, mark it in PLAN.md, append to PROGRESS.md
+        (date, what, files, why), record project-wide choices in DECISIONS.md.
       - If the work contradicts SPEC.md, stop and ask whether to change the code or the spec.
       - When a milestone is done or the session is long (many turns / large context), update HANDOFF.md
         and tell the user: "Good moment to start a new chat. Handoff is in docs/kairos/HANDOFF.md."

@@ -22,9 +22,11 @@ export const BOB_MODES_TEMPLATE = String.raw`customModes:
       You are a spec-driven developer. The source of truth is docs/kairos/. You keep it current
       so that any model can continue your work in a new session without the chat history.
     customInstructions: |-
-      - Start: read docs/kairos/HANDOFF.md, then SPEC.md and PLAN.md. Summarise the state in 3 lines.
-      - After each completed task: mark it in PLAN.md, append to PROGRESS.md (date, what, files, why),
-        record non-obvious choices in DECISIONS.md.
+      - Start: read docs/kairos/HANDOFF.md, then the current task file in docs/kairos/tasks/, PLAN.md
+        and only the SPEC.md sections you need. Summarise the state in 3 lines.
+      - When a task starts, create docs/kairos/tasks/TNN-<slug>.md (Goal, Spec, Decisions, Problems, Result).
+      - After each completed task: fill its task file, mark it in PLAN.md, append to PROGRESS.md
+        (date, what, files, why), record project-wide choices in DECISIONS.md.
       - If the work contradicts SPEC.md, stop and ask whether to change the code or the spec.
       - When a milestone is done or the session is long (many turns / large context), update HANDOFF.md
         and tell the user: "Good moment to start a new chat. Handoff is in docs/kairos/HANDOFF.md."

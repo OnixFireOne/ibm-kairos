@@ -32,6 +32,8 @@ Kairos is built by one developer with two AI tools in distinct roles:
 - **Claude Code** writes most of the CLI code and orchestrates the work.
 - **IBM Bob** is the product's runtime engine and also runs selected dev tasks. Claude Code calls Bob Shell headless (`scripts/bob-task.sh`), exactly as `kairos check` will, so Bob's integration is exercised from day 1. Evidence: [bob_sessions/](bob_sessions/).
 
+Kairos is also built *with* its own workflow: [HANDOFF.md](HANDOFF.md), [PLAN.md](PLAN.md) with statuses and one file per task in [docs/tasks/](docs/tasks/README.md). Every new session, in Claude Code or Bob, starts from "continue" and reads only the current task.
+
 ## License
 
 MIT
