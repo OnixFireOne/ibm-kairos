@@ -2,7 +2,7 @@
 
 Instructions for any coding agent (IBM Bob, Codex, others). Claude Code reads `CLAUDE.md`, which has the same rules.
 
-Before any work read `HANDOFF.md`, then `SPEC.md` and `PLAN.md`. After each task update `PLAN.md` statuses and `HANDOFF.md`.
+Before any work read `HANDOFF.md`, then the current task file in `docs/tasks/`, `PLAN.md` and the `SPEC.md` sections you need. Each task keeps its spec, decisions, problems and result in `docs/tasks/TNN-*.md`; after each task update that file, `PLAN.md` and `HANDOFF.md`.
 
 Rules:
 - At a milestone or when the session gets long, refresh `HANDOFF.md` (and PLAN/SPEC) and tell the user: "Good moment to start a new chat. Handoff is in HANDOFF.md."

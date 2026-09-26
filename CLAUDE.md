@@ -2,7 +2,7 @@
 
 Hackathon project (IBM Bob 2.0, lablab.ai). Deadline: **Sun Sep 27, 2026 15:00 UTC**. Solo dev.
 
-Before doing anything read `HANDOFF.md` (current state, next step, gotchas), then `SPEC.md` (what/why/architecture) and `PLAN.md` (tasks with statuses). After each task update `PLAN.md` statuses and `HANDOFF.md`.
+Before doing anything read `HANDOFF.md` (current state, next step, gotchas), then the current task file in `docs/tasks/`, `PLAN.md` (statuses) and the `SPEC.md` sections you need. Each task keeps its spec, decisions, problems and result in `docs/tasks/TNN-*.md`; after each task update that file, `PLAN.md` and `HANDOFF.md`.
 
 ## Rules
 - At a milestone or when the session gets long, refresh `HANDOFF.md` (and PLAN/SPEC) and tell the user: "Good moment to start a new chat. Handoff is in HANDOFF.md."

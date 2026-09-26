@@ -37,18 +37,18 @@ After each Bob task, screenshot its consumption summary into `bob_sessions/` rig
 
 ## Tasks for Claude Code / Codex
 
-Status: `[x]` done, `[~]` in progress, `[ ]` todo. Current state and next step: [HANDOFF.md](HANDOFF.md).
+Status: `[x]` done, `[~]` in progress, `[ ]` todo. Current state and next step: [HANDOFF.md](HANDOFF.md). Each task gets its own file in [docs/tasks/](docs/tasks/README.md) (spec, decisions, problems, result) when work on it starts.
 
 Who does what (agreed on day 1): Claude Code writes contracts, fixtures and red tests; IBM Bob implements well-bounded modules against them via `scripts/bob-task.sh` (T2, T3, later T8, T9, T13, T14); Claude Code reviews, fixes and commits. Claude Code keeps product-critical glue (prompt renderer, engines, CLI commands).
 
 Each task: small PR/commit, tests green, no secrets.
 
-- [x] **T0 Scaffold.** pnpm workspace, `packages/cli` (TS, Node 20, commander, zod, execa, fast-glob, yaml, vitest), `bin: kairos`, lint/format, `pnpm test`, `.gitignore` (`.kairos/cache`, `.env`). Copy `.bob/custom_modes.yaml` from SPEC §6.6.
-- [x] **T1 Config.** `.kairos/config.yaml` loader with zod + defaults (SPEC §7). `kairos init` writes the config + the mode file if missing.
-- [x] **T2 Collector.** `getDiff(base)` → files, hunks with line numbers, changed symbols (regex: function/const/class names, `app.(get|post|put|delete)('route')`, `process.env.X`). Tests on fixture diffs.
-- [x] **T3 Context builder.** Glob the intent sources, split markdown by headings, select sections by `map` and symbol grep, attach line numbers, enforce `maxContextChars`. Build the prompt (task + diff + excerpts + JSON schema). Snapshot tests.
-- [x] **T4 Schema + parser.** zod `DriftReport`/`Finding` (SPEC §6.4). Extract JSON from the engine text (fenced or raw), validate, one repair retry through the engine.
-- [ ] **T5 Engines.** `MockEngine` (fixtures by prompt hash, with a fallback fixture). `BobEngine`: spawn `bob run --mode kairos --format json --max-cost --max-turns`, prompt via stdin, parse the final message, save the raw output to `.kairos/runs/<ts>-check.json`. Cache in `.kairos/cache/<sha>.json`. Timeouts + clear error if `bob` is not installed.
+- [x] **T0 Scaffold.** [→ task file](docs/tasks/T00-scaffold.md) pnpm workspace, `packages/cli` (TS, Node 20, commander, zod, execa, fast-glob, yaml, vitest), `bin: kairos`, lint/format, `pnpm test`, `.gitignore` (`.kairos/cache`, `.env`). Copy `.bob/custom_modes.yaml` from SPEC §6.6.
+- [x] **T1 Config.** [→ task file](docs/tasks/T01-config.md) `.kairos/config.yaml` loader with zod + defaults (SPEC §7). `kairos init` writes the config + the mode file if missing.
+- [x] **T2 Collector.** [→ task file](docs/tasks/T02-diff-collector.md) `getDiff(base)` → files, hunks with line numbers, changed symbols (regex: function/const/class names, `app.(get|post|put|delete)('route')`, `process.env.X`). Tests on fixture diffs.
+- [x] **T3 Context builder.** [→ task file](docs/tasks/T03-context-builder.md) Glob the intent sources, split markdown by headings, select sections by `map` and symbol grep, attach line numbers, enforce `maxContextChars`. Build the prompt (task + diff + excerpts + JSON schema). Snapshot tests.
+- [x] **T4 Schema + parser.** [→ task file](docs/tasks/T04-report-schema.md) zod `DriftReport`/`Finding` (SPEC §6.4). Extract JSON from the engine text (fenced or raw), validate, one repair retry through the engine.
+- [ ] **T5 Engines.** [→ task file](docs/tasks/T05-engines.md) `MockEngine` (fixtures by prompt hash, with a fallback fixture). `BobEngine`: spawn `bob run --mode kairos --format json --max-cost --max-turns`, prompt via stdin, parse the final message, save the raw output to `.kairos/runs/<ts>-check.json`. Cache in `.kairos/cache/<sha>.json`. Timeouts + clear error if `bob` is not installed.
 - [ ] **T6 `check` command + Markdown reporter.** Print a summary table, write `.kairos/history/<runId>.json` + `kairos-report.md`, exit 1 if `severity >= failOn`. Flags: `--base`, `--engine`, `--json`, `--no-cache`.
 - [ ] **T7 Demo repo.** `demo/orders-api`: Express+TS, `POST/GET /orders`, pricing with a discount rule, `docs/SPEC.md` (Pricing, Orders, Config sections), `openapi.yaml`, `README.md` (env vars), vitest tests. `scripts/drift-a.sh`, `drift-b.sh`, `drift-c.sh`, `control.sh`, `reset.sh` (git-based, repeatable).
 - [ ] **T8 Prompt tuning (me + Bob).** Iterate on the mode instructions/prompt until A, B and C are found and control is clean. Record the outputs as fixtures for MockEngine.
