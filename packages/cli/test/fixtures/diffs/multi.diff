@@ -1,0 +1,28 @@
+diff --git a/big.ts b/big.ts
+index d29f94c..bc28b6e 100644
+--- a/big.ts
++++ b/big.ts
+@@ -15,11 +15,11 @@ export function first(a: number) {
+   // first 15
+   // first 16
+   // first 17
+   // first 18
+   // first 19
+-  return base;
++  return base * 2;
+ }
+ 
+ export function second(b: number) {
+   // second 24
+   // second 25
+@@ -37,6 +37,7 @@ export function second(b: number) {
+   // second 37
+   // second 38
+   // second 39
+   return b * 2;
+ }
+-export const LAST = 1;
+\ No newline at end of file
++console.log('boot');
++export const LAST = 2;
+\ No newline at end of file

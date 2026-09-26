@@ -1,0 +1,27 @@
+Task T2 of the Kairos project (see PLAN.md, SPEC.md §6.1): implement the git diff collector.
+
+Create exactly one file: `packages/cli/src/collector/diff.ts`. The tests in `packages/cli/test/diff.test.ts` are the specification and are currently red. Make them green.
+
+Hard constraints:
+- Do NOT modify `packages/cli/src/collector/types.ts`, any file under `packages/cli/test/`, or anything else in the repo.
+- No new dependencies. Use `execa` for git. TypeScript strict, ESM (`.js` import suffixes), small pure functions, English comments only where non-obvious.
+- Verify from the repo root with `pnpm test` and `pnpm lint` (tsc + prettier; run `pnpm format` if prettier complains). Stop when both pass.
+
+Exports (types come from `./types.js`):
+- `class DiffError extends Error`
+- `parseDiff(raw: string): FileDiff[]`
+- `extractSymbols(files: FileDiff[]): ChangedSymbol[]`
+- `getDiff(base: string, opts?: { cwd?: string }): Promise<DiffResult>`: runs `git diff --unified=5 --no-color --no-ext-diff -M <base>...HEAD` and `git rev-parse HEAD` in `cwd`; any git failure throws `DiffError` whose message includes the base ref.
+
+parseDiff rules:
+- Files start at `diff --git a/X b/Y`. Status: `new file mode` => added; `deleted file mode` => deleted (path = old path); `rename from/to` => renamed (oldPath = old path); otherwise modified. `oldPath` is null unless renamed. `Binary files ... differ` => binary: true, no hunks.
+- Hunk header `@@ -a[,b] +c[,d] @@ header`; a missing count means 1. `header` is the trimmed text after the second `@@` ('' if none).
+- `lines` keeps the ' ', '+', '-' prefixed body lines; skip `\ No newline at end of file`. Track old/new line counters to fill `added` (new-file numbers) and `removed` (old-file numbers).
+
+extractSymbols rules (only changed '+'/'-' lines produce symbols; context lines never do on their own):
+1. Declarations on a changed line: `function name` (also `async function`, `function* name`), `class Name`, `const name =` / `const name:` (with or without `export`); routes `<ident>.(get|post|put|patch|delete)(` followed by a quoted path starting with `/` (single, double or backtick quotes) => name `METHOD /path` in upper case; env vars `process.env.NAME` and `process.env['NAME']` / `process.env["NAME"]`. A '+' line gives change 'added', a '-' line gives 'removed'; line = that line's number on its side.
+2. Enclosing declaration: for a changed line that is not blank and has no function/class/const/route declaration of its own, walk backwards inside the same hunk over lines of the same side (context + '+' for added lines, context + '-' for removed lines). The first line with a function/class/route/const declaration (priority in that order) is the enclosing symbol, change 'modified', line = the changed line's number. Stop with no result at a line whose content starts at column 0 with `}`, `)` or `]`. If the hunk start is reached, use the declaration found in the hunk `header`, if any.
+3. Merge by (file, kind, name): if the same symbol is both 'added' and 'removed' => one 'modified' entry with the added line's number. Otherwise the first entry wins; an enclosing 'modified' never replaces an existing entry.
+4. Order: files in diff order; within a file by line ascending, then kind in the order function, class, const, route, env, then name.
+
+Finish with a short summary: what you implemented, test and lint results, anything you were unsure about.

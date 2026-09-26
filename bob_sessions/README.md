@@ -10,6 +10,7 @@ Evidence of IBM Bob usage, as required by the hackathon guide.
 | 00 | Bob Shell (`bob run`, ask) | Probe: API key auth works headless | 0.011 | — |
 | 01 | Bob Shell (`bob run`, agent) | Fixed `fileRegex` quoting in `.bob/custom_modes.yaml` so the `kairos-fix` mode loads | 0.211 | [kairos_task01_custom_modes.png](kairos_task01_custom_modes.png) |
 | 01b | Bob Shell (`bob run`, `kairos` mode) | Verified the custom `kairos` mode loads | 0.010 | — |
+| 02 | Bob Shell (`bob run`, agent) | Implemented the git diff collector (`packages/cli/src/collector/diff.ts`) against tests written first by Claude Code; 22/22 green | 1.293 | `kairos_task02_diff_collector.png` |
 
 ## How Bob is driven during development
 
