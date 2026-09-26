@@ -8,7 +8,7 @@ Evidence of IBM Bob usage, as required by the hackathon guide.
 | Task | Tool | What Bob did | Bobcoins | Screenshot |
 |---|---|---|---|---|
 | 00 | Bob Shell (`bob run`, ask) | Probe: API key auth works headless | 0.011 | — |
-| 01 | Bob Shell (`bob run`, agent) | Fixed `fileRegex` quoting in `.bob/custom_modes.yaml` so the `kairos-fix` mode loads | 0.211 | `kairos_task01_custom_modes.png` |
+| 01 | Bob Shell (`bob run`, agent) | Fixed `fileRegex` quoting in `.bob/custom_modes.yaml` so the `kairos-fix` mode loads | 0.211 | [kairos_task01_custom_modes.png](kairos_task01_custom_modes.png) |
 | 01b | Bob Shell (`bob run`, `kairos` mode) | Verified the custom `kairos` mode loads | 0.010 | — |
 
 ## How Bob is driven during development
