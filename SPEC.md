@@ -126,6 +126,7 @@ git diff ──► Collector ──► Context Builder ──► Engine (Bob | M
 - Relevance: an explicit mapping in config (`src/pricing/** → docs/SPEC.md#pricing`) plus a grep for changed symbols in intent files.
 - Trims to a token budget (`maxContextChars`, default 60k). Markdown files are sectioned by heading and only matching sections are included.
 - Builds the prompt: the task, the diff, relevant intent excerpts with paths and line numbers, and the output JSON schema.
+- As implemented (T3): the diff always goes in whole; excerpts get `maxContextChars - diff.length`. Map targets `file#Heading` select the section incl. subsections; bare `file` selects the whole file. Symbol grep uses only "searchable" symbols (env, routes, functions/classes ≥3 chars, consts only if UPPER_CASE or camelCase ≥4 chars); routes match `:param` and `{param}`. Markdown matches select the section; other files a ±10 line window. Overlapping excerpts merge; budget priority: map, then number of matched symbols.
 
 ### 6.2.1 Kairos docs as context
 - The Context Builder always includes `docs/kairos/SPEC.md` sections matched to the diff, plus `DECISIONS.md` entries touching those areas, so past decisions are respected.
@@ -139,6 +140,7 @@ interface Engine { analyze(prompt: string, opts: RunOpts): Promise<EngineResult>
 - **BobEngine**: spawns `bob run --mode kairos --format json --max-cost <n> --max-turns <n> [--accept-license]`. The prompt goes via stdin. It extracts the final message, parses the JSON block, and saves the raw output to `.kairos/runs/<timestamp>-<cmd>.json`.
 - **MockEngine**: returns fixtures from `fixtures/<diff-hash>.json`. Used in tests and in CI when Bob is not available.
 - Cache: key = sha256(prompt), stored in `.kairos/cache/`, so a rerun on the same diff costs 0 Bobcoins.
+- Verified Bob Shell 2.0.5 facts: headless `bob run` needs `BOB_API_KEY` (SSO login is not used); `--format json` prints one JSON object per line: optional `{"type":"error","message":...}` lines (e.g. cost limit), then `{"type":"result","status","stats":{task_id,session_costs,tool_calls,duration_ms,...},"last_message"}`. Hitting `--max-cost` still ends with `status: "success"` plus the error line, so treat an error line as a failed run. Tasks run by Bob Shell also appear in Bob IDE → Tasks (same machine), which is where screenshots come from.
 
 ### 6.4 Drift Report schema (zod)
 ```ts
@@ -156,7 +158,8 @@ Finding {
 }
 DriftReport { runId, base, head, createdAt, findings: Finding[], summary: string, cost?: { bobcoins?: number } }
 ```
-- Invalid JSON: one repair retry (a small prompt: "return valid JSON only"), then fail gracefully.
+- Bob replies with `BobReply = { findings, summary }`; Kairos wraps it into `DriftReport` (adds runId/base/head/createdAt/cost). The JSON Schema in the prompt is generated from the zod schema (`bobReplyJsonSchema()`, ~1.8k chars).
+- Invalid JSON: one repair retry (a small prompt: "return valid JSON only"), then fail gracefully. JSON is accepted raw, fenced or wrapped in prose; a single line number and a missing `intent` are normalised.
 
 ### 6.5 Fix flow
 - `kairos fix --id KRS-002 [--truth intent|code]`.
@@ -244,15 +247,18 @@ kairos/
   README.md                 # pitch, quickstart, how Bob is used, screenshots
   SPEC.md  PLAN.md  CLAUDE.md
   .bob/custom_modes.yaml
-  bob_sessions/             # REQUIRED: PNG screenshots of Bob task consumption summaries
+  bob_sessions/             # REQUIRED: PNG screenshots of Bob task summaries; cli/ raw bob run JSON; prompts/
+  scripts/bob-task.sh       # dev: run one headless Bob task and keep prompt + JSON evidence
   packages/cli/src/
     index.ts                # commander entry
     commands/{init,check,fix,handoff,session,report,hook,spec}.ts
-    collector/diff.ts
+    config/{schema,load}.ts # zod config + defaults (§7)
+    templates/              # config + Bob modes shipped by `kairos init`
+    collector/{types,diff}.ts
     docs/{scaffold,handoff,freshness,progress}.ts
-    context/{intent,sections,builder}.ts
+    context/{types,glob,sections,intent,select,prompt,builder}.ts
     engine/{types,bob,mock,cache}.ts
-    report/{schema,markdown,html}.ts
+    report/{schema,parse,markdown,html}.ts
   packages/cli/test/
   fixtures/                 # mock engine responses
   demo/orders-api/          # demo repo + scripts/drift-{a,b,c}.sh

@@ -37,23 +37,27 @@ After each Bob task, screenshot its consumption summary into `bob_sessions/` rig
 
 ## Tasks for Claude Code / Codex
 
+Status: `[x]` done, `[~]` in progress, `[ ]` todo. Current state and next step: [HANDOFF.md](HANDOFF.md).
+
+Who does what (agreed on day 1): Claude Code writes contracts, fixtures and red tests; IBM Bob implements well-bounded modules against them via `scripts/bob-task.sh` (T2, T3, later T8, T9, T13, T14); Claude Code reviews, fixes and commits. Claude Code keeps product-critical glue (prompt renderer, engines, CLI commands).
+
 Each task: small PR/commit, tests green, no secrets.
 
-- **T0 Scaffold.** pnpm workspace, `packages/cli` (TS, Node 20, commander, zod, execa, fast-glob, yaml, vitest), `bin: kairos`, lint/format, `pnpm test`, `.gitignore` (`.kairos/cache`, `.env`). Copy `.bob/custom_modes.yaml` from SPEC §6.6.
-- **T1 Config.** `.kairos/config.yaml` loader with zod + defaults (SPEC §7). `kairos init` writes the config + the mode file if missing.
-- **T2 Collector.** `getDiff(base)` → files, hunks with line numbers, changed symbols (regex: function/const/class names, `app.(get|post|put|delete)('route')`, `process.env.X`). Tests on fixture diffs.
-- **T3 Context builder.** Glob the intent sources, split markdown by headings, select sections by `map` and symbol grep, attach line numbers, enforce `maxContextChars`. Build the prompt (task + diff + excerpts + JSON schema). Snapshot tests.
-- **T4 Schema + parser.** zod `DriftReport`/`Finding` (SPEC §6.4). Extract JSON from the engine text (fenced or raw), validate, one repair retry through the engine.
-- **T5 Engines.** `MockEngine` (fixtures by prompt hash, with a fallback fixture). `BobEngine`: spawn `bob run --mode kairos --format json --max-cost --max-turns`, prompt via stdin, parse the final message, save the raw output to `.kairos/runs/<ts>-check.json`. Cache in `.kairos/cache/<sha>.json`. Timeouts + clear error if `bob` is not installed.
-- **T6 `check` command + Markdown reporter.** Print a summary table, write `.kairos/history/<runId>.json` + `kairos-report.md`, exit 1 if `severity >= failOn`. Flags: `--base`, `--engine`, `--json`, `--no-cache`.
-- **T7 Demo repo.** `demo/orders-api`: Express+TS, `POST/GET /orders`, pricing with a discount rule, `docs/SPEC.md` (Pricing, Orders, Config sections), `openapi.yaml`, `README.md` (env vars), vitest tests. `scripts/drift-a.sh`, `drift-b.sh`, `drift-c.sh`, `control.sh`, `reset.sh` (git-based, repeatable).
-- **T8 Prompt tuning (me + Bob).** Iterate on the mode instructions/prompt until A, B and C are found and control is clean. Record the outputs as fixtures for MockEngine.
-- **T9 Fix flow.** `kairos fix --id <ID> [--truth intent|code] [--allow-code] [--yes]` → `bob run --mode kairos-fix`, shows the git diff, confirm, re-runs `check` scoped to that finding.
-- **T10 Integrations.** `kairos hook install` (pre-push). `action.yml` (composite: setup node, `pnpm dlx kairos check --engine ${{ inputs.engine }}`, post/update a PR comment via `gh`). Example workflow in `demo/.github/workflows/kairos.yml`.
-- **T11 HTML timeline.** `kairos report --html` → single-file `kairos-timeline.html` from `.kairos/history`: runs over time, findings opened/resolved, severity colours, logo.
-- **T13 Living docs scaffold.** `kairos init` creates `docs/kairos/{SPEC,PLAN,PROGRESS,DECISIONS,HANDOFF}.md` from templates, plus pointer blocks (between `<!-- kairos:start/end -->` markers) in `CLAUDE.md` and `AGENTS.md`, plus the `kairos-dev` mode in `.bob/custom_modes.yaml`. `post-commit` hook → `PROGRESS.md` entry (hash, message, files). `kairos fix` appends to `DECISIONS.md`. Tests.
-- **T14 Handoff + freshness.** `kairos handoff` (git log since the last handoff + PLAN status + the last report → Bob drafts `HANDOFF.md` by template; mock for tests). Docs-freshness candidates in `check` (SPEC §6.2.1). `kairos session "<task>"` wraps `bob run --mode kairos-dev --format json`, sums turns/cost per session in `.kairos/session.json`, and runs a handoff with the "start a new chat" message over the threshold.
-- **T12 Submission assets.** README (pitch, GIF/screenshots, quickstart, "How Kairos uses IBM Bob" section, architecture diagram), `docs/slides.md`, video script, cover 16:9.
+- [x] **T0 Scaffold.** pnpm workspace, `packages/cli` (TS, Node 20, commander, zod, execa, fast-glob, yaml, vitest), `bin: kairos`, lint/format, `pnpm test`, `.gitignore` (`.kairos/cache`, `.env`). Copy `.bob/custom_modes.yaml` from SPEC §6.6.
+- [x] **T1 Config.** `.kairos/config.yaml` loader with zod + defaults (SPEC §7). `kairos init` writes the config + the mode file if missing.
+- [x] **T2 Collector.** `getDiff(base)` → files, hunks with line numbers, changed symbols (regex: function/const/class names, `app.(get|post|put|delete)('route')`, `process.env.X`). Tests on fixture diffs.
+- [x] **T3 Context builder.** Glob the intent sources, split markdown by headings, select sections by `map` and symbol grep, attach line numbers, enforce `maxContextChars`. Build the prompt (task + diff + excerpts + JSON schema). Snapshot tests.
+- [x] **T4 Schema + parser.** zod `DriftReport`/`Finding` (SPEC §6.4). Extract JSON from the engine text (fenced or raw), validate, one repair retry through the engine.
+- [ ] **T5 Engines.** `MockEngine` (fixtures by prompt hash, with a fallback fixture). `BobEngine`: spawn `bob run --mode kairos --format json --max-cost --max-turns`, prompt via stdin, parse the final message, save the raw output to `.kairos/runs/<ts>-check.json`. Cache in `.kairos/cache/<sha>.json`. Timeouts + clear error if `bob` is not installed.
+- [ ] **T6 `check` command + Markdown reporter.** Print a summary table, write `.kairos/history/<runId>.json` + `kairos-report.md`, exit 1 if `severity >= failOn`. Flags: `--base`, `--engine`, `--json`, `--no-cache`.
+- [ ] **T7 Demo repo.** `demo/orders-api`: Express+TS, `POST/GET /orders`, pricing with a discount rule, `docs/SPEC.md` (Pricing, Orders, Config sections), `openapi.yaml`, `README.md` (env vars), vitest tests. `scripts/drift-a.sh`, `drift-b.sh`, `drift-c.sh`, `control.sh`, `reset.sh` (git-based, repeatable).
+- [ ] **T8 Prompt tuning (me + Bob).** Iterate on the mode instructions/prompt until A, B and C are found and control is clean. Record the outputs as fixtures for MockEngine.
+- [ ] **T9 Fix flow.** `kairos fix --id <ID> [--truth intent|code] [--allow-code] [--yes]` → `bob run --mode kairos-fix`, shows the git diff, confirm, re-runs `check` scoped to that finding.
+- [ ] **T10 Integrations.** `kairos hook install` (pre-push). `action.yml` (composite: setup node, `pnpm dlx kairos check --engine ${{ inputs.engine }}`, post/update a PR comment via `gh`). Example workflow in `demo/.github/workflows/kairos.yml`.
+- [ ] **T11 HTML timeline.** `kairos report --html` → single-file `kairos-timeline.html` from `.kairos/history`: runs over time, findings opened/resolved, severity colours, logo.
+- [ ] **T13 Living docs scaffold.** `kairos init` creates `docs/kairos/{SPEC,PLAN,PROGRESS,DECISIONS,HANDOFF}.md` from templates, plus pointer blocks (between `<!-- kairos:start/end -->` markers) in `CLAUDE.md` and `AGENTS.md`, plus the `kairos-dev` mode in `.bob/custom_modes.yaml`. `post-commit` hook → `PROGRESS.md` entry (hash, message, files). `kairos fix` appends to `DECISIONS.md`. Tests.
+- [ ] **T14 Handoff + freshness.** `kairos handoff` (git log since the last handoff + PLAN status + the last report → Bob drafts `HANDOFF.md` by template; mock for tests). Docs-freshness candidates in `check` (SPEC §6.2.1). `kairos session "<task>"` wraps `bob run --mode kairos-dev --format json`, sums turns/cost per session in `.kairos/session.json`, and runs a handoff with the "start a new chat" message over the threshold.
+- [ ] **T12 Submission assets.** README (pitch, GIF/screenshots, quickstart, "How Kairos uses IBM Bob" section, architecture diagram), `docs/slides.md`, video script, cover 16:9.
 
 ## Video script (≈3 min)
 1. (20s) Problem: code drifts from intent; nobody notices until it hurts.

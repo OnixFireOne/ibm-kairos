@@ -2,7 +2,7 @@
 
 Hackathon project (IBM Bob 2.0, lablab.ai). Deadline: **Sun Sep 27, 2026 15:00 UTC**. Solo dev.
 
-Read `SPEC.md` (what/why/architecture) and `PLAN.md` (tasks T0–T12, timeline) before doing anything.
+Before doing anything read `HANDOFF.md` (current state, next step, gotchas), then `SPEC.md` (what/why/architecture) and `PLAN.md` (tasks with statuses). After each task update `PLAN.md` statuses and `HANDOFF.md`.
 
 ## Rules
 - Everything in the repo is in English (code, comments, docs, commits, Bob prompts): judges are English-speaking.
