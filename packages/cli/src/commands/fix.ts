@@ -8,9 +8,11 @@ import type { KairosConfig } from '../config/schema.js';
 import { DiffError } from '../collector/diff.js';
 import { BobEngine, type BobEngineOptions } from '../engine/bob.js';
 import { EngineError, FIXTURES_DIR } from '../engine/index.js';
+import { logDecision } from '../docs/log.js';
 import { location } from '../report/markdown.js';
 import { ReplyParseError } from '../report/parse.js';
 import { DriftReport, type Finding } from '../report/schema.js';
+import { DECISIONS_PATH, PROGRESS_PATH } from '../templates/living-docs.js';
 import { type CheckResult, HISTORY_DIR, runCheck } from './check.js';
 
 /** Files the `kairos-fix` mode may edit; mirrors its `fileRegex` in `.bob/custom_modes.yaml`. */
@@ -150,7 +152,9 @@ async function applyFix(
 }
 
 const lines = (out: string) => out.split('\n').filter(Boolean);
-const isRuntime = (path: string) => path.startsWith('.kairos/') || path === 'kairos-report.md';
+/** Written by Kairos itself: run output, and PROGRESS.md entries the post-commit hook leaves behind. */
+const isRuntime = (path: string) =>
+  path.startsWith('.kairos/') || path === 'kairos-report.md' || path === PROGRESS_PATH;
 
 async function untracked(cwd: string): Promise<string[]> {
   return lines(await git(cwd, 'ls-files', '--others', '--exclude-standard'));
@@ -195,7 +199,10 @@ export async function runFix(cwd: string, o: FixOptions): Promise<FixResult> {
   if (!o.yes && !o.confirm) {
     throw new FixError('Not an interactive terminal: pass --yes to keep the fix without asking.');
   }
-  if ((await git(cwd, 'status', '--porcelain', '--untracked-files=no')).trim()) {
+  const dirty = lines(await git(cwd, 'status', '--porcelain', '--untracked-files=no'))
+    .map((l) => l.slice(3))
+    .filter((p) => !isRuntime(p));
+  if (dirty.length) {
     throw new FixError('The working tree has uncommitted changes. Commit or stash them first.');
   }
 
@@ -239,7 +246,17 @@ export async function runFix(cwd: string, o: FixOptions): Promise<FixResult> {
     return { ...base, status: 'rejected', diff };
   }
 
-  await git(cwd, 'add', '--', ...changedFiles);
+  const logged = await logDecision(cwd, {
+    date: (o.now?.() ?? new Date()).toISOString().slice(0, 10),
+    id: finding.id,
+    type: finding.type,
+    title: finding.title,
+    truth,
+    location: location(finding.code),
+    files: changedFiles,
+    summary: applied.summary,
+  });
+  await git(cwd, 'add', '--', ...changedFiles, ...(logged ? [DECISIONS_PATH] : []));
   await git(
     cwd,
     'commit',

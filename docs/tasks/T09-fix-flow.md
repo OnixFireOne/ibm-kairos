@@ -22,7 +22,7 @@ Status: [~] code done (mock + fake bob), real Bob fix runs pending · Owner: Cla
 - **Clean tree required** (tracked files only; untracked `.kairos/history` and `kairos-report.md` from `check` are fine), so the diff and a revert touch only Bob's edits.
 - **Belt and braces for docs-only**: the mode's `fileRegex` stops Bob, and Kairos checks the changed files itself (a mode edited by the user or an older Bob must not slip code changes through).
 - **New mode `kairos-fix-code`** instead of rewriting `.bob/custom_modes.yaml` on the fly for `--allow-code`.
-- Appending to `docs/kairos/DECISIONS.md` is left to T13 (that file does not exist yet).
+- Appending to `docs/kairos/DECISIONS.md` landed in T13 (inside the fix commit, only when the file exists).
 
 ## Problems
 - Mock re-check on the demo reports "resolved" only because there is no fixture for the post-fix prompt (empty reply). Fine for offline rehearsal, not evidence.

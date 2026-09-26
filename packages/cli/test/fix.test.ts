@@ -270,6 +270,43 @@ describe('runFix', () => {
     expect(args[args.indexOf('--mode') + 1]).toBe(FIX_CODE_MODE);
   });
 
+  it('logs the decision in DECISIONS.md within the fix commit, ignoring hook PROGRESS entries', async () => {
+    const cwd = await repo([finding()]);
+    await mkdir(join(cwd, 'docs/kairos'));
+    await writeFile(join(cwd, 'docs/kairos/DECISIONS.md'), '# Decisions\n');
+    await writeFile(join(cwd, 'docs/kairos/PROGRESS.md'), '# Progress\n');
+    await git(cwd, 'add', '.');
+    await git(cwd, 'commit', '-qm', 'living docs');
+    // the post-commit hook leaves the log dirty
+    await writeFile(join(cwd, 'docs/kairos/PROGRESS.md'), '# Progress\n\n## entry\n');
+
+    const { opts } = fakeBob(cwd, updateSpec(cwd));
+    const res = await runFix(cwd, { id: 'KRS-001', yes: true, check: false, ...opts });
+
+    expect(res.status).toBe('committed');
+    expect(res.changedFiles).toEqual(['docs/SPEC.md']);
+    expect((await git(cwd, 'show', '--name-only', '--format=', 'HEAD')).split('\n')).toEqual([
+      'docs/SPEC.md',
+      'docs/kairos/DECISIONS.md',
+    ]);
+    const decisions = await readFile(join(cwd, 'docs/kairos/DECISIONS.md'), 'utf8');
+    expect(decisions).toBe(
+      [
+        '# Decisions',
+        '',
+        '## 2026-09-26 · kairos fix KRS-001 (STALE_DOC)',
+        '- Finding: SPEC still says 10% (`src/pricing.ts:3`)',
+        '- Source of truth: code',
+        '- Changed: `docs/SPEC.md`',
+        '- Resolution: Updated docs/SPEC.md to 15%.',
+        '',
+      ].join('\n'),
+    );
+    expect(await git(cwd, 'status', '--porcelain', '--untracked-files=no')).toBe(
+      ' M docs/kairos/PROGRESS.md',
+    );
+  });
+
   describe('refuses before spending Bobcoins', () => {
     const cases: Array<[string, Finding, Parameters<typeof runFix>[1], RegExp]> = [
       ['unknown id', finding(), { id: 'KRS-404', yes: true }, /No finding KRS-404.*KRS-001/],
