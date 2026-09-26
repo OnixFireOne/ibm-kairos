@@ -1,5 +1,5 @@
 # T09 Fix flow
-Status: [x] done (real Bob run on the demo; screenshots pending) · Owner: Claude Code
+Status: [x] done (real Bob run on the demo, screenshots in bob_sessions/) · Owner: Claude Code
 
 ## Goal
 `kairos fix --id <ID>`: IBM Bob resolves one finding from the last check, the user sees the diff and confirms, Kairos commits it and re-runs `check` to prove the drift is gone.
@@ -37,4 +37,4 @@ Status: [x] done (real Bob run on the demo; screenshots pending) · Owner: Claud
 - Demo: `demo/orders-api/.kairos/fixtures/fix-KRS-002.patch` (hand-written, C: `DB_URL` → `DATABASE_URL` in README + SPEC). Smoke: reset, drift A/B/C, `check --engine mock`, `fix --id KRS-002 --engine mock --yes` → committed, resolved.
 - Real run on the demo (Bob tasks 06–13, 1.12 Bobcoins incl. the failed attempt): check → 4 findings; `fix --id KRS-002` (C, docs) → resolved; `fix --id KRS-002 --truth code` (B: SPEC + openapi + 2 tests, which also closed MISSING_TEST) → resolved; `fix --id KRS-001 --truth intent --allow-code` (A: code + tests back to 10%) → resolved; final re-check clean.
 - Recorded: `demo/orders-api/.kairos/fixtures/fix-KRS-002-STALE_DOC.patch`, `fix-KRS-002-UNDOCUMENTED_BEHAVIOR.patch`, `fix-KRS-001-SPEC_VIOLATION.patch` (replacing the hand-written patch) + the 3 re-check replies. Offline rehearsal with `--engine mock` replays the chain to a clean check.
-- 142 tests green. Pending: screenshots of Bob tasks 06–13 (Bob IDE, workspace `orders-api`).
+- 142 tests green. Screenshots of Bob tasks 06–13: `bob_sessions/kairos_task06…13_*.png`.

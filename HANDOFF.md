@@ -7,7 +7,7 @@ Updated: 2026-09-26 ~22:00 Astana, T10 done (hook, Action, CI green on GitHub). 
 - Bobcoins spent: 4.85 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
-Nothing. Screenshots of Bob tasks 06–13 are pending from the user (ids in `bob_sessions/README.md`, rows marked `pending`).
+Nothing.
 
 ## Next step
 1. When the user drops the screenshots for tasks 06–13 into `../shots/`: rename, link in `bob_sessions/README.md`, commit.
