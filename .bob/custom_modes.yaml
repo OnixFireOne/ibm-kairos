@@ -39,6 +39,6 @@ customModes:
     groups:
       - read
       - - edit
-        - fileRegex: \.(md|ya?ml|json|test\.ts)$
+        - fileRegex: "\\.(md|ya?ml|json|test\\.ts)$"
           description: Docs, specs, contracts and tests only
       - command

@@ -59,7 +59,7 @@ Kairos targets **code review + maintenance + onboarding**, and the demo measures
 
 ## 3. Why IBM Bob is the core (eligibility)
 
-- The analysis engine *is* Bob: `bob run --chat-mode=kairos --format json`.
+- The analysis engine *is* Bob: `bob run --mode kairos --format json`.
 - Kairos ships a **Bob custom mode** (`.bob/custom_modes.yaml`) usable interactively in Bob IDE (`/kairos`) and headless via Bob Shell.
 - Bob's whole-repo understanding is what makes the check possible: it reads the code around the diff, not just the diff.
 - Cost control relies on Bob Shell features: `--max-cost`, `--max-turns`.
@@ -101,7 +101,7 @@ Kairos targets **code review + maintenance + onboarding**, and the demo measures
 - A git `pre-push` hook installer (`kairos hook install`).
 - `kairos report --html`: a static single-file HTML timeline of drift history (`.kairos/history/*.json`).
 - `kairos spec init`: Bob drafts a SPEC from code for repos without one.
-- `kairos session "<task>"`: wraps `bob run --chat-mode=kairos-dev`, tracks cumulative turns/Bobcoins per session, triggers a handoff over the threshold.
+- `kairos session "<task>"`: wraps `bob run --mode kairos-dev`, tracks cumulative turns/Bobcoins per session, triggers a handoff over the threshold.
 
 ### Out of scope
 - Multi-repo, SaaS or auth, a web backend, IDE extension packaging, languages beyond a JS/TS demo repo.
@@ -111,7 +111,7 @@ Kairos targets **code review + maintenance + onboarding**, and the demo measures
 ```
 git diff ──► Collector ──► Context Builder ──► Engine (Bob | Mock) ──► Parser/Validator ──► Reporters
                │                 │                    │                      │              ├─ Markdown (PR comment)
-               │                 │            bob run --chat-mode=kairos      │              ├─ JSON (.kairos/history)
+               │                 │            bob run --mode kairos      │              ├─ JSON (.kairos/history)
           changed files   intent sources      --format json --max-cost N     zod schema      └─ HTML timeline
                           (config globs +
                            symbol matching)
@@ -136,7 +136,7 @@ git diff ──► Collector ──► Context Builder ──► Engine (Bob | M
 ```ts
 interface Engine { analyze(prompt: string, opts: RunOpts): Promise<EngineResult> }
 ```
-- **BobEngine**: spawns `bob run --chat-mode=kairos --format json --max-cost <n> --max-turns <n> [--accept-license]`. The prompt goes via stdin. It extracts the final message, parses the JSON block, and saves the raw output to `.kairos/runs/<timestamp>-<cmd>.json`.
+- **BobEngine**: spawns `bob run --mode kairos --format json --max-cost <n> --max-turns <n> [--accept-license]`. The prompt goes via stdin. It extracts the final message, parses the JSON block, and saves the raw output to `.kairos/runs/<timestamp>-<cmd>.json`.
 - **MockEngine**: returns fixtures from `fixtures/<diff-hash>.json`. Used in tests and in CI when Bob is not available.
 - Cache: key = sha256(prompt), stored in `.kairos/cache/`, so a rerun on the same diff costs 0 Bobcoins.
 
@@ -160,7 +160,7 @@ DriftReport { runId, base, head, createdAt, findings: Finding[], summary: string
 
 ### 6.5 Fix flow
 - `kairos fix --id KRS-002 [--truth intent|code]`.
-- Runs `bob run --chat-mode=kairos-fix` with the finding plus the files. The mode's `edit` group is restricted by `fileRegex` to docs/tests (`\.(md|ya?ml|test\.ts)$`) unless `--allow-code`.
+- Runs `bob run --mode kairos-fix` with the finding plus the files. The mode's `edit` group is restricted by `fileRegex` to docs/tests (`\.(md|ya?ml|test\.ts)$`) unless `--allow-code`.
 - Then shows `git diff` and asks for confirmation (`--yes` for CI or demo).
 
 ### 6.6 Bob custom modes (`.bob/custom_modes.yaml`)
@@ -210,7 +210,7 @@ customModes:
           description: Docs, specs, contracts and tests only
       - command
 ```
-> ⚠ Verify the exact YAML syntax for `fileRegex` groups against the Bob docs on day 1; the docs example is ambiguous.
+> Verified day 1 by Bob (task 01): `fileRegex` must be a double-quoted string with escaped backslashes, e.g. `"\\.(md|ya?ml|json|test\\.ts)$"`. See `.bob/custom_modes.yaml`.
 
 ## 7. Config (`.kairos/config.yaml`)
 ```yaml
@@ -276,7 +276,7 @@ kairos/
 | Risk | Mitigation |
 |---|---|
 | Limited Bobcoins | Cheap deterministic pre-filtering, `--max-cost`, prompt cache, mock engine for dev/tests. Real Bob only for tuning + demo runs. |
-| Bob Shell auth unavailable in GitHub CI (the guide: Bob Shell uses the same bob.ibm.com/login auth; no API key mentioned) | Demo the Action with a local `bob` run (or pre-push hook). The Action supports `engine: mock` for a dry run. Show the real Bob run locally in the video. |
+| Bob Shell auth in GitHub CI | Verified day 1: headless `bob run` requires `BOB_API_KEY` (Inference scope) even after SSO login, so CI can use a repo secret. Default the Action to `engine: mock`; real Bob via the secret or a local run/pre-push hook. |
 | Non-JSON / unstable output | Strict schema in the prompt, a JSON repair retry, zod validation, low temperature through instructions. |
 | False positives | Require evidence on both sides, a confidence threshold (default 0.6), and a control commit in the demo. |
 | Time (solo, 48h) | Strict MVP cut. Dashboard and Action are "should", not "must". |

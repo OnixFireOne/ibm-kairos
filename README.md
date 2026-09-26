@@ -25,6 +25,13 @@ Requires Node ≥ 20 (Node ≥ 24 for Bob Shell).
 
 Bob custom modes live in [.bob/custom_modes.yaml](.bob/custom_modes.yaml). Evidence of every Bob task is in [bob_sessions/](bob_sessions/).
 
+## How it was built
+
+Kairos is built by one developer with two AI tools in distinct roles:
+
+- **Claude Code** writes most of the CLI code and orchestrates the work.
+- **IBM Bob** is the product's runtime engine and also runs selected dev tasks. Claude Code calls Bob Shell headless (`scripts/bob-task.sh`), exactly as `kairos check` will, so Bob's integration is exercised from day 1. Evidence: [bob_sessions/](bob_sessions/).
+
 ## License
 
 MIT

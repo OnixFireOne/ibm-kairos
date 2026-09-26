@@ -1,0 +1,4 @@
+Review `.bob/custom_modes.yaml` in this project against the current IBM Bob custom modes format (use your docs tool if needed).
+Fix the syntax so that the three project modes `kairos`, `kairos-dev` and `kairos-fix` load correctly, especially the `edit` group in `kairos-fix` that must be restricted with `fileRegex` to docs, specs, contracts and tests (`\.(md|ya?ml|json|test\.ts)$`).
+Do not change the intent, role definitions or instructions of the modes. Only edit `.bob/custom_modes.yaml`.
+Finish with a short summary of what you changed and why.
