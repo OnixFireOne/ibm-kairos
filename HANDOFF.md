@@ -1,16 +1,16 @@
 # Handoff
 
-Updated: 2026-09-26 ~14:30 Astana, after T4. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~14:35 Astana, after T5. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser. 65 tests green, lint clean, all pushed to `main` on github.com/OnixFireOne/ibm-kairos.
+- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache). 78 tests green, lint clean, all pushed to `main` on github.com/OnixFireOne/ibm-kairos.
 - Bobcoins spent: 3.61 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
 Nothing. Working tree clean.
 
 ## Next step
-T5 Engines (Claude Code, no Bob): spec and verified Bob Shell behaviour in [docs/tasks/T05-engines.md](docs/tasks/T05-engines.md). Then T6 `check` + Markdown reporter, T7 demo repo.
+T6 `check` command + Markdown reporter (Claude Code, no Bob): wire `getDiff` → context builder → `createEngine(config, …)` → `parseWithRepair(text, repairWith(engine))` → `DriftReport`; see PLAN T6 and the T05 decisions for the engine API. Then T7 demo repo.
 
 ## Gotchas
 - Never run real `bob` unless asked. Run Bob tasks with `zsh -ic 'scripts/bob-task.sh <taskNN-name> <prompt-file> [mode] [maxCost] [maxTurns]'` (the key lives in `~/.zshrc`; plain shells don't see it). Never print/commit the key.

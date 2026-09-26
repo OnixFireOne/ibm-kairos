@@ -1,5 +1,5 @@
 # T05 Engines
-Status: [ ] · Owner: Claude Code · Commits: —
+Status: [x] · Owner: Claude Code · Commits: see `git log --grep T5`
 
 ## Goal
 Run the prompt through IBM Bob (real) or fixtures (mock), with cache and cost limits.
@@ -19,7 +19,17 @@ Run the prompt through IBM Bob (real) or fixtures (mock), with cache and cost li
 - Tasks run by Bob Shell appear in Bob IDE → Tasks on the same machine (screenshots come from there). Trivial ask ≈ 0.01 Bobcoins.
 
 ## Decisions
+- `Engine.analyze(prompt, { kind })` returns `{ text, costBobcoins?, taskId?, raw, cached? }`; `kind` (`check`/`repair`/`fix`) only names the saved run file.
+- `bob` is spawned through an injectable `exec` (default: execa with `reject: false`), so tests never touch the real binary. Args mirror `scripts/bob-task.sh`: `run --trust --mode kairos --format json --max-cost N --max-turns N`, prompt on stdin, default timeout 10 min.
+- `BOB_API_KEY` is checked before spawning (no Bobcoins, clear message). ENOENT → "Bob Shell not installed, or use `--engine mock`".
+- Raw stdout is saved to `.kairos/runs/<ts>-<kind>.json` before any error is raised, so failed/capped runs keep their evidence and `task_id`.
+- Any `{"type":"error"}` line fails the run (`EngineError` carries `taskId`), even with `status: "success"`.
+- Only Bob is cached (`CachedEngine`, `.kairos/cache/<sha256(prompt)>.json`, entry tagged with the engine name, corrupt entry = miss, failures not cached). A hit returns `costBobcoins: 0, cached: true`. The mock is free and never cached.
+- MockEngine reads `.kairos/fixtures/<sha256(prompt)>.txt`, then `.kairos/fixtures/fallback.txt`, then a built-in empty reply. `.kairos/fixtures/` is committed (T8 records demo replies there via `fixtureName(prompt)`).
+- `createEngine(config, { cwd, engine?, noCache?, bob? })` is the factory for T6; `repairWith(engine)` plugs into `parseWithRepair`.
 
 ## Problems
+None. Real execa ENOENT mapping verified once with a fake binary name (no `bob` run).
 
 ## Result
+`packages/cli/src/engine/{types,mock,cache,bob,index}.ts`, 13 tests in `test/engine.test.ts`; 78 total green, lint clean. No Bobcoins spent.
