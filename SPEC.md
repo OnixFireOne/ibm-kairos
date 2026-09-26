@@ -168,7 +168,7 @@ DriftReport { runId, base, head, createdAt, findings: Finding[], summary: string
 ### 6.5 Fix flow
 - `kairos fix --id KRS-002 [--truth intent|code]`.
 - Runs `bob run --mode kairos-fix` with the finding plus the files. The mode's `edit` group is restricted by `fileRegex` to docs/tests (`\.(md|ya?ml|test\.ts)$`) unless `--allow-code`.
-- Then shows `git diff` and asks for confirmation (`--yes` for CI or demo).
+- Then shows `git diff` and asks for confirmation (`--yes` for CI or demo). Accepted fixes are committed (`kairos fix KRS-002: …`) and `check` re-runs to confirm the finding is gone. Details: [docs/tasks/T09-fix-flow.md](docs/tasks/T09-fix-flow.md).
 
 ### 6.6 Bob custom modes (`.bob/custom_modes.yaml`)
 ```yaml
@@ -218,6 +218,7 @@ customModes:
         - fileRegex: \.(md|ya?ml|json|test\.ts)$
           description: Docs, specs, contracts and tests only
       - command
+  - slug: kairos-fix-code   # used by `kairos fix --allow-code`: same, with unrestricted edit
 ```
 > Verified day 1 by Bob (task 01): `fileRegex` must be a double-quoted string with escaped backslashes, e.g. `"\\.(md|ya?ml|json|test\\.ts)$"`. See `.bob/custom_modes.yaml`.
 

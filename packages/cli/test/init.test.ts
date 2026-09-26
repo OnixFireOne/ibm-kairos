@@ -41,8 +41,8 @@ describe('Bob modes template', () => {
     expect(BOB_MODES_TEMPLATE).toBe(repoFile);
   });
 
-  it('defines kairos, kairos-dev and kairos-fix', () => {
+  it('defines kairos, kairos-dev, kairos-fix and kairos-fix-code', () => {
     const slugs = parse(BOB_MODES_TEMPLATE).customModes.map((m: { slug: string }) => m.slug);
-    expect(slugs).toEqual(['kairos', 'kairos-dev', 'kairos-fix']);
+    expect(slugs).toEqual(['kairos', 'kairos-dev', 'kairos-fix', 'kairos-fix-code']);
   });
 });

@@ -21,3 +21,10 @@ node <kairos>/packages/cli/dist/index.js check --engine mock
 ```
 
 Mock replies for the demo live in `orders-api/.kairos/fixtures/` (recorded from real Bob runs in T8).
+Then fix a finding (Bob edits docs/tests, you confirm the diff, Kairos commits and re-checks):
+
+```bash
+node <kairos>/packages/cli/dist/index.js fix --id KRS-002                  # C: README + SPEC to DATABASE_URL
+node <kairos>/packages/cli/dist/index.js fix --id KRS-003 --truth code     # B: document DELETE in SPEC + openapi
+node <kairos>/packages/cli/dist/index.js fix --id KRS-002 --engine mock --yes   # offline: applies fixtures/fix-KRS-002.patch
+```

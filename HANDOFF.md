@@ -1,16 +1,17 @@
 # Handoff
 
-Updated: 2026-09-26 ~15:05 Astana, after T8. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~20:55 Astana, T9 code done. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report, T7 demo repo + drift scripts, T8 real Bob on the demo (A/B/C found, control clean, fixtures recorded). 89 tests green, lint clean, all pushed to `main` on github.com/OnixFireOne/ibm-kairos.
+- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report, T7 demo repo + drift scripts, T8 real Bob on the demo (A/B/C found, control clean, fixtures recorded), T9 `kairos fix` code (mock + fake bob, see `docs/tasks/T09-fix-flow.md`). 111 tests green, lint clean, all pushed to `main` on github.com/OnixFireOne/ibm-kairos.
 - Bobcoins spent: 3.73 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
-Nothing. Working tree clean.
+T9 [~]: `kairos fix` is implemented and tested (fake `bob` + mock patch fixtures). Only real Bob fix runs on the demo remain, and they need the user's go (Bobcoins).
 
 ## Next step
-T9 fix flow: `kairos fix --id <ID> [--truth intent|code] [--allow-code] [--yes]` → `bob run --mode kairos-fix` (mode in `.bob/custom_modes.yaml`), show git diff, confirm, re-run check. Findings to fix live in `.kairos/history/<runId>.json` (latest run). Test against a fake `bob` exec; real runs on the demo (B, C) only when asked.
+1. When the user says go: real `kairos fix` on the demo (reset, drift A/B/C, `check`, then `fix --id KRS-002` for C, `fix --id KRS-003 --truth code` and `fix --id KRS-004` for B). Save Bob's diffs as `demo/orders-api/.kairos/fixtures/fix-<ID>.patch` (ids depend on that run's report), screenshot the tasks (next Bob task number 06), mark T9 done.
+2. Otherwise continue with T13 living docs scaffold (`kairos fix` should then also append to `docs/kairos/DECISIONS.md`).
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).

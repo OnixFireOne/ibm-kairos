@@ -45,4 +45,14 @@ export const BOB_MODES_TEMPLATE = String.raw`customModes:
         - fileRegex: "\\.(md|ya?ml|json|test\\.ts)$"
           description: Docs, specs, contracts and tests only
       - command
+  - slug: kairos-fix-code
+    name: Kairos — Drift Fixer (code)
+    description: Applies the proposed resolution for one Kairos finding, source code included (kairos fix --allow-code)
+    roleDefinition: >-
+      You resolve one drift finding with the smallest correct change. The documented intent is the
+      source of truth, so you may change source code to match it.
+    customInstructions: |-
+      - Change only what is needed to resolve the given finding.
+      - Keep the style of the surrounding code, docs and tests. Run the tests if asked.
+    groups: [read, edit, command]
 `;

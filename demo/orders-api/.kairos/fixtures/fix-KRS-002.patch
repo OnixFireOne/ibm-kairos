@@ -1,0 +1,31 @@
+diff --git a/README.md b/README.md
+index e4b98d3..4356cd8 100644
+--- a/README.md
++++ b/README.md
+@@ -7,7 +7,7 @@ Business rules live in [docs/SPEC.md](docs/SPEC.md), the HTTP contract in [opena
+ 
+ ```bash
+ pnpm install
+-DB_URL=postgres://localhost:5432/orders pnpm start
++DATABASE_URL=postgres://localhost:5432/orders pnpm start
+ pnpm test
+ ```
+ 
+@@ -15,5 +15,5 @@ pnpm test
+ 
+ | Variable | Required | Default | Description |
+ |---|---|---|---|
+-| `DB_URL` | yes | — | Connection string of the orders database |
++| `DATABASE_URL` | yes | — | Connection string of the orders database |
+ | `PORT` | no | `3000` | HTTP port |
+diff --git a/docs/SPEC.md b/docs/SPEC.md
+index f994e7c..c80eca9 100644
+--- a/docs/SPEC.md
++++ b/docs/SPEC.md
+@@ -23,5 +23,5 @@ unless the spec is changed first.
+ ## Config
+ 
+ - The service is configured only through environment variables, documented in `README.md`.
+-- `DB_URL` (required): connection string of the orders database.
++- `DATABASE_URL` (required): connection string of the orders database.
+ - `PORT` (optional, default 3000): HTTP port.
