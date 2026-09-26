@@ -41,7 +41,7 @@ A new chat with any of them starts with "continue" and nothing else.
 
 **Kairos = the right moment:**
 1. **The right moment to write things down.** In `kairos-dev` mode, Bob updates `PLAN`/`PROGRESS`/`DECISIONS` right after each task, while the context is fresh.
-2. **The right moment to start a new chat.** Bob recommends a new session when a milestone is done or the session passes a budget (turns or Bobcoins, taken from Bob Shell `--format json` stats via `kairos session`). Before recommending, it writes `HANDOFF.md`, so the reset costs nothing.
+2. **The right moment to start a new chat.** Bob recommends a new session only when it pays off, not after every task: the next task needs a different area of the code (and the tree is clean), or the session passes a budget (turns or Bobcoins, taken from Bob Shell `--format json` stats via `kairos session`). Before recommending, it writes `HANDOFF.md`, so the reset costs nothing.
 3. **The right moment to catch drift.** `kairos check` verifies that the code still matches `SPEC.md`/contracts/tests, and also that the docs were updated (for example, code changed but `PROGRESS.md` or `PLAN.md` didn't → `STALE_DOC`).
 
 This closes the loop: **spec → plan → work (docs auto-updated) → handoff → new session continues → drift check keeps code and docs honest.**
@@ -94,7 +94,7 @@ Kairos targets **code review + maintenance + onboarding**, and the demo measures
 - `kairos check`: diff → context → Bob → Drift Report (JSON + Markdown), with an exit code.
 - `kairos fix --id <finding>`: Bob applies the fix for one finding (docs/tests only by default) and appends the decision to `decisions.md`.
 - `kairos init` also scaffolds `docs/kairos/` (SPEC, PLAN, PROGRESS, DECISIONS, HANDOFF, `tasks/`) and the agent pointers (`CLAUDE.md`, `AGENTS.md`, the Bob mode).
-- `kairos-dev` Bob mode: works on tasks and auto-updates the docs; writes `HANDOFF.md` and recommends a new chat at a milestone or over budget.
+- `kairos-dev` Bob mode: works on tasks and auto-updates the docs; writes `HANDOFF.md` and recommends a new chat when the work switches area or the session is over budget (not after every task).
 - `kairos handoff`: generates or refreshes `HANDOFF.md` from the git log + docs + the last report (for sessions that ended abruptly).
 - A `post-commit` hook appends commit entries to `PROGRESS.md` (no LLM).
 - A `mock` engine with recorded fixtures (tests and offline demo).
@@ -201,8 +201,12 @@ customModes:
       - After each completed task: fill its task file, mark it in PLAN.md, append to PROGRESS.md
         (date, what, files, why), record project-wide choices in DECISIONS.md.
       - If the work contradicts SPEC.md, stop and ask whether to change the code or the spec.
-      - When a milestone is done or the session is long (many turns / large context), update HANDOFF.md
-        and tell the user: "Good moment to start a new chat. Handoff is in docs/kairos/HANDOFF.md."
+      - Recommend a new chat only when it pays off, not after every task:
+        a) the next task needs different code or context and the working tree is clean, or
+        b) the session is long (about 30-40 tool calls, several large file reads, or over the session budget).
+        Stay in the chat when the next task builds on code already in context; 2-3 related tasks per chat is normal.
+      - Before recommending, update HANDOFF.md. Say it once per milestone: "Good moment to start a new chat.
+        Handoff is in docs/kairos/HANDOFF.md. First message: 'Continue TNN: <next task>'."
     groups: [read, edit, command]
   - slug: kairos-fix
     name: Kairos — Drift Fixer

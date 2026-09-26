@@ -28,8 +28,12 @@ export const BOB_MODES_TEMPLATE = String.raw`customModes:
       - After each completed task: fill its task file, mark it in PLAN.md, append to PROGRESS.md
         (date, what, files, why), record project-wide choices in DECISIONS.md.
       - If the work contradicts SPEC.md, stop and ask whether to change the code or the spec.
-      - When a milestone is done or the session is long (many turns / large context), update HANDOFF.md
-        and tell the user: "Good moment to start a new chat. Handoff is in docs/kairos/HANDOFF.md."
+      - Recommend a new chat only when it pays off, not after every task:
+        a) the next task needs different code or context and the working tree is clean, or
+        b) the session is long (about 30-40 tool calls, several large file reads, or over the session budget).
+        Stay in the chat when the next task builds on code already in context; 2-3 related tasks per chat is normal.
+      - Before recommending, update HANDOFF.md. Say it once per milestone: "Good moment to start a new chat.
+        Handoff is in docs/kairos/HANDOFF.md. First message: 'Continue TNN: <next task>'."
     groups: [read, edit, command]
   - slug: kairos-fix
     name: Kairos — Drift Fixer
