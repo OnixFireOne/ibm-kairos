@@ -6,6 +6,8 @@ export interface PromptInput {
   selection: ContextSelection;
   /** JSON Schema of the expected reply (from the report schema, T4). */
   outputSchema: string;
+  /** Docs-freshness candidates from deterministic pre-checks (T14); omitted when empty. */
+  candidates?: string[];
 }
 
 const TASK = `# Kairos drift check
@@ -44,7 +46,12 @@ function renderExcerpt(e: Excerpt): string {
 }
 
 /** Builds the full prompt sent to Bob in the `kairos` mode. */
-export function buildPrompt({ diff, selection, outputSchema }: PromptInput): string {
+export function buildPrompt({
+  diff,
+  selection,
+  outputSchema,
+  candidates = [],
+}: PromptInput): string {
   const files = diff.files.map((f) =>
     f.oldPath
       ? `- ${f.path} (renamed from ${f.oldPath})`
@@ -73,6 +80,15 @@ export function buildPrompt({ diff, selection, outputSchema }: PromptInput): str
       '## Intent excerpts',
       excerpts.join('\n\n') ||
         'No intent excerpts matched this change. Search the repository yourself.',
+      ...(candidates.length
+        ? [
+            '## Docs freshness candidates',
+            'Deterministic pre-checks flagged the living docs as possibly stale. For each one, open the doc: ' +
+              'confirm it as a STALE_DOC finding (intent side = the doc, truth "code", propose the doc update) ' +
+              'or dismiss it if the docs are in fact current.\n' +
+              candidates.map((c) => `- ${c}`).join('\n'),
+          ]
+        : []),
       '## Output',
       'Reply with a single JSON object and nothing else. It must match this JSON Schema:',
       fence(outputSchema, 'json'),

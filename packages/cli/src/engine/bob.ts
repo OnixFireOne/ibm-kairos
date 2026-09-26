@@ -52,7 +52,7 @@ export interface BobEngineOptions {
 interface BobResultLine {
   type: 'result';
   status: string;
-  stats?: { task_id?: string; session_costs?: number };
+  stats?: { task_id?: string; session_costs?: number; tool_calls?: number };
   last_message?: string;
 }
 
@@ -136,6 +136,7 @@ export class BobEngine implements Engine {
     return {
       text: result.last_message,
       costBobcoins: result.stats?.session_costs,
+      toolCalls: result.stats?.tool_calls,
       taskId,
       raw: res.stdout,
     };

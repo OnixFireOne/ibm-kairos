@@ -10,6 +10,14 @@ export const Budget = z.object({
   maxContextChars: z.number().int().positive().default(60_000),
 });
 
+/** `kairos session`: per-run caps for Bob and the session budget that triggers a handoff. */
+export const Session = z.object({
+  maxCostPerRun: z.number().positive().default(3),
+  maxTurnsPerRun: z.number().int().positive().default(40),
+  toolCallBudget: z.number().int().positive().default(40),
+  bobcoinBudget: z.number().positive().default(5),
+});
+
 export const KairosConfig = z.object({
   base: z.string().min(1).default('origin/main'),
   intent: z
@@ -20,6 +28,7 @@ export const KairosConfig = z.object({
   failOn: Severity.default('medium'),
   minConfidence: z.number().min(0).max(1).default(0.6),
   budget: Budget.prefault({}),
+  session: Session.prefault({}),
   engine: z.enum(['bob', 'mock']).default('bob'),
 });
 

@@ -1,9 +1,9 @@
 # Handoff
 
-Updated: 2026-09-26 ~21:10 Astana, T13 done. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~21:25 Astana, T14 done. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report, T7 demo repo + drift scripts, T8 real Bob on the demo (A/B/C found, control clean, fixtures recorded), T9 `kairos fix` code (mock + fake bob, see `docs/tasks/T09-fix-flow.md`), T13 living docs scaffold (`init` → `docs/kairos/`, CLAUDE/AGENTS pointers, post-commit hook → `kairos progress`, `fix` → DECISIONS.md; see `docs/tasks/T13-living-docs.md`). 123 tests green, lint clean. Pushed to `main` on github.com/OnixFireOne/ibm-kairos up to T9; T13 commit is local until pushed.
+- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report, T7 demo repo + drift scripts, T8 real Bob on the demo (A/B/C found, control clean, fixtures recorded), T9 `kairos fix` code (mock + fake bob, see `docs/tasks/T09-fix-flow.md`), T13 living docs scaffold (`init` → `docs/kairos/`, CLAUDE/AGENTS pointers, post-commit hook → `kairos progress`, `fix` → DECISIONS.md; see `docs/tasks/T13-living-docs.md`), T14 handoff + freshness (`kairos handoff`, `kairos session` budget, freshness candidates in `check`, `kairos-dev` runs init/check and fixes findings itself; see `docs/tasks/T14-handoff-freshness.md`). 140 tests green, lint clean, pushed to `main` on github.com/OnixFireOne/ibm-kairos.
 - Bobcoins spent: 3.73 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
@@ -11,7 +11,7 @@ T9 [~]: `kairos fix` is implemented and tested (fake `bob` + mock patch fixtures
 
 ## Next step
 1. When the user says go: real `kairos fix` on the demo (reset, drift A/B/C, `check`, then `fix --id KRS-002` for C, `fix --id KRS-003 --truth code` and `fix --id KRS-004` for B). Save Bob's diffs as `demo/orders-api/.kairos/fixtures/fix-<ID>.patch` (ids depend on that run's report), screenshot the tasks (next Bob task number 06), mark T9 done.
-2. Otherwise continue with T14: `kairos handoff`, docs-freshness in `check`, `kairos session` budget (builds on `src/docs/log.ts` and `src/templates/living-docs.ts`).
+2. Otherwise continue with T10 integrations (`kairos hook install` pre-push running `check`, `action.yml`, demo workflow), then T11 HTML timeline.
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).
@@ -21,6 +21,7 @@ T9 [~]: `kairos fix` is implemented and tested (fake `bob` + mock patch fixtures
 - Screenshots (required evidence, only for tasks Bob ran): after each Bob run, remind the user in chat with the task number, prompt title and `task_id` (Bob IDE → Tasks → All → open the task → click its header). The user drops the PNG into `../shots/`; view it, check task id and that no secrets are visible, move it to `bob_sessions/kairos_taskNN_<desc>.png` (glob the filename: macOS uses a special space), add/link its row in `bob_sessions/README.md`, commit. Next Bob task number: 06. Tell the user not to press "Continue Task" on capped tasks. Runs made by `kairos check`/`fix` on the demo appear in Bob IDE under the `orders-api` workspace, not `ibm-kairos`.
 - Everything in the repo is English (judges). Chat with the user in Russian.
 - Bob CLI flag is `--mode`, not `--chat-mode`.
+- Run prettier from the repo root only (from `packages/cli` it misses `.prettierignore` and rewrites `.md` snapshots).
 - `pnpm test` must stay green at every commit, so tests + implementation land together. Before committing run root `pnpm lint` (tsc + prettier), not only `tsc`.
 
 ## Read first

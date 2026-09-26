@@ -13,5 +13,10 @@ budget:
   maxCost: 2            # Bobcoins per run
   maxTurns: 8
   maxContextChars: 60000
+session:                # kairos session: Bob in kairos-dev mode
+  maxCostPerRun: 3
+  maxTurnsPerRun: 40
+  toolCallBudget: 40    # over either budget: write HANDOFF.md, suggest a new chat
+  bobcoinBudget: 5
 engine: bob             # bob | mock
 `;

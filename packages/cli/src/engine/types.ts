@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 
 /** What the prompt is for; used to name saved raw runs. */
-export type RunKind = 'check' | 'repair' | 'fix';
+export type RunKind = 'check' | 'repair' | 'fix' | 'handoff' | 'session';
 
 export interface AnalyzeOptions {
   kind?: RunKind;
@@ -11,6 +11,8 @@ export interface EngineResult {
   /** The engine's final message (Bob's `last_message`). */
   text: string;
   costBobcoins?: number;
+  /** Tool calls Bob made in this run (`stats.tool_calls`). */
+  toolCalls?: number;
   taskId?: string;
   /** Raw engine output, kept for evidence and debugging. */
   raw: string;

@@ -171,6 +171,7 @@ DriftReport { runId, base, head, createdAt, findings: Finding[], summary: string
 - Then shows `git diff` and asks for confirmation (`--yes` for CI or demo). Accepted fixes are committed (`kairos fix KRS-002: …`) and `check` re-runs to confirm the finding is gone. Details: [docs/tasks/T09-fix-flow.md](docs/tasks/T09-fix-flow.md).
 
 ### 6.6 Bob custom modes (`.bob/custom_modes.yaml`)
+The excerpt below is the original design; the shipped file `.bob/custom_modes.yaml` is the source of truth (also has `kairos-fix-code` and the Kairos command rules in `kairos-dev`).
 ```yaml
 customModes:
   - slug: kairos
@@ -244,6 +245,11 @@ budget:
   maxCost: 2            # bobcoins per run
   maxTurns: 8
   maxContextChars: 60000
+session:                # kairos session (Bob in kairos-dev mode)
+  maxCostPerRun: 3
+  maxTurnsPerRun: 40
+  toolCallBudget: 40    # over either budget: write HANDOFF.md, suggest a new chat
+  bobcoinBudget: 5
 engine: bob             # bob | mock
 ```
 

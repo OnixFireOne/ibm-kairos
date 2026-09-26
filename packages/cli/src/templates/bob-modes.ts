@@ -28,6 +28,13 @@ export const BOB_MODES_TEMPLATE = String.raw`customModes:
       - After each completed task: fill its task file, mark it in PLAN.md, append to PROGRESS.md
         (date, what, files, why), record project-wide choices in DECISIONS.md.
       - If the work contradicts SPEC.md, stop and ask whether to change the code or the spec.
+      - Kairos commands: if asked, run ${'`'}kairos init${'`'} (scaffolds docs/kairos, config, modes, hooks).
+        After each completed task, and before a handoff, run ${'`'}kairos check${'`'} once (it spends Bobcoins,
+        so not after every edit). The PROGRESS.md commit log is written by a git hook; add only the why.
+      - Resolving a Kairos finding in chat: fix it yourself with the smallest change (ask which side is
+        the source of truth when the finding says "ask"; ask before changing source code), append an
+        entry to docs/kairos/DECISIONS.md (finding id and type, source of truth, files, resolution),
+        then run ${'`'}kairos check${'`'} to confirm it is gone. Do not call ${'`'}kairos fix${'`'} from chat.
       - Recommend a new chat only when it pays off, not after every task:
         a) the next task needs different code or context and the working tree is clean, or
         b) the session is long (about 30-40 tool calls, several large file reads, or over the session budget).

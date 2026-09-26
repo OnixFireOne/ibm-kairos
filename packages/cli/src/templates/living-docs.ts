@@ -105,6 +105,8 @@ just "continue": pick up from "Next step".
 - After each task: fill its task file, mark it in \`PLAN.md\`, add why to \`PROGRESS.md\`, record
   project-wide choices in \`DECISIONS.md\`.
 - If the work contradicts \`SPEC.md\`, stop and ask whether to change the code or the spec.
+- Resolving a Kairos drift finding: fix it with the smallest change, append the decision (id, source of
+  truth, files, resolution) to \`DECISIONS.md\`, then run \`kairos check\` once to confirm.
 - Recommend a new chat only when the next task needs different code and the tree is clean, or the
   session is long. Update \`HANDOFF.md\` first.
 ${POINTER_END}`;
