@@ -1,0 +1,3 @@
+node_modules/
+.kairos/cache/
+.kairos/runs/

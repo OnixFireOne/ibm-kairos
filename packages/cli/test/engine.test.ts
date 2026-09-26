@@ -30,7 +30,11 @@ const resultLine = (over: Record<string, unknown> = {}) =>
     last_message: REPLY,
     ...over,
   });
-const errorLine = JSON.stringify({ type: 'error', severity: 'error', message: 'Max cost exceeded' });
+const errorLine = JSON.stringify({
+  type: 'error',
+  severity: 'error',
+  message: 'Max cost exceeded',
+});
 
 function bob(cwd: string, stdout: string, extra: Partial<Awaited<ReturnType<Exec>>> = {}) {
   const exec = vi.fn<Exec>(async () => ({ stdout, stderr: '', exitCode: 0, ...extra }));
@@ -61,9 +65,18 @@ describe('BobEngine', () => {
     expect(res).toMatchObject({ text: REPLY, costBobcoins: 0.42, taskId: 't-123' });
     const [file, args, opts] = exec.mock.calls[0]!;
     expect(file).toBe('bob');
-    expect(args).toEqual(
-      ['run', '--trust', '--mode', 'kairos', '--format', 'json', '--max-cost', '2', '--max-turns', '8'],
-    );
+    expect(args).toEqual([
+      'run',
+      '--trust',
+      '--mode',
+      'kairos',
+      '--format',
+      'json',
+      '--max-cost',
+      '2',
+      '--max-turns',
+      '8',
+    ]);
     expect(opts).toMatchObject({ input: 'PROMPT', cwd });
   });
 

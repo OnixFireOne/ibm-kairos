@@ -113,7 +113,9 @@ export function registerCheck(program: Command): void {
           console.log(JSON.stringify(res.report, null, 2));
         } else {
           console.log(renderSummary(res.report, { failOn: res.config.failOn }));
-          console.log(`\nReport: ${REPORT_FILE} · history: ${HISTORY_DIR}/${res.report.runId}.json`);
+          console.log(
+            `\nReport: ${REPORT_FILE} · history: ${HISTORY_DIR}/${res.report.runId}.json`,
+          );
           if (res.report.cost?.bobcoins !== undefined) {
             console.log(`Cost: ${res.report.cost.bobcoins} Bobcoins`);
           }

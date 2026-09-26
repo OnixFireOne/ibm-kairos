@@ -142,7 +142,10 @@ export class BobEngine implements Engine {
   }
 
   private async saveRun(stdout: string, kind: RunKind): Promise<void> {
-    const ts = (this.o.now?.() ?? new Date()).toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+    const ts = (this.o.now?.() ?? new Date())
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/\.\d+/, '');
     const dir = join(this.o.cwd, RUNS_DIR);
     await mkdir(dir, { recursive: true });
     await writeFile(join(dir, `${ts}-${kind}.json`), stdout);

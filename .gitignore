@@ -12,3 +12,4 @@ coverage/
 # kairos runtime
 .kairos/cache/
 .kairos/runs/
+demo/.work/

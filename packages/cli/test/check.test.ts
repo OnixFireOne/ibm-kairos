@@ -40,7 +40,10 @@ async function demoRepo(config = 'engine: mock\n') {
   await git(cwd, 'config', 'user.name', 'Test');
   await mkdir(join(cwd, 'docs'));
   await mkdir(join(cwd, 'src'));
-  await writeFile(join(cwd, 'docs/SPEC.md'), '# Spec\n\n## Pricing\n\nOrders above $100 get 10% off.\n');
+  await writeFile(
+    join(cwd, 'docs/SPEC.md'),
+    '# Spec\n\n## Pricing\n\nOrders above $100 get 10% off.\n',
+  );
   await writeFile(
     join(cwd, 'src/pricing.ts'),
     'export function price(total: number) {\n  if (total <= 100) return total;\n  return total * 0.9;\n}\n',

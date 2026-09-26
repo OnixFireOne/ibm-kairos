@@ -85,7 +85,8 @@ export function renderSummary(report: DriftReport, opts: { failOn: Severity }): 
     const rows = findings.map((f) => [f.id, f.severity, f.type, location(f.code), f.title]);
     const widths = [0, 1, 2, 3].map((c) => Math.max(...rows.map((r) => r[c]!.length)));
     lines.push('');
-    for (const r of rows) lines.push(r.map((v, c) => (c < 4 ? v.padEnd(widths[c]!) : v)).join('  '));
+    for (const r of rows)
+      lines.push(r.map((v, c) => (c < 4 ? v.padEnd(widths[c]!) : v)).join('  '));
   }
   const failing = blocking(findings, opts.failOn).length;
   lines.push(

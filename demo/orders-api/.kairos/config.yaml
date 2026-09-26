@@ -1,0 +1,18 @@
+# Kairos config. See https://github.com/OnixFireOne/ibm-kairos
+base: main
+intent:
+  - docs/**/*.md
+  - openapi.yaml
+  - README.md
+tests: ['test/**/*.test.ts']
+map:
+  'src/pricing.ts': ['docs/SPEC.md#Pricing']
+  'src/routes/**': ['docs/SPEC.md#Orders', 'openapi.yaml']
+  'src/config.ts': ['docs/SPEC.md#Config', 'README.md']
+failOn: medium
+minConfidence: 0.6
+budget:
+  maxCost: 2
+  maxTurns: 8
+  maxContextChars: 60000
+engine: bob
