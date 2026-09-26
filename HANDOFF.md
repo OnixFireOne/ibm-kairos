@@ -1,17 +1,17 @@
 # Handoff
 
-Updated: 2026-09-26 ~22:00 Astana, T10 done (hook, Action, CI green on GitHub). Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~22:15 Astana, T11 done (`kairos report --html` timeline). Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0–T10, T13, T14 (details: `PLAN.md` and `docs/tasks/`). Last: T10 integrations (`kairos hook install`, `action.yml`, CI runs the Action on the demo; see `docs/tasks/T10-integrations.md`).
-- 150 tests green, lint clean, CI green on GitHub, pushed to `main` on github.com/OnixFireOne/ibm-kairos.
+- Done: T0–T11, T13, T14 (details: `PLAN.md` and `docs/tasks/`). Last: T11 HTML timeline (`kairos report [--html] [--out]`, single self-contained page; see `docs/tasks/T11-html-timeline.md`).
+- 161 tests green, lint clean. T10 CI green on GitHub; T11 not pushed yet.
 - Bobcoins spent: 4.85 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
 Nothing. Screenshots of all Bob tasks 01–13 are in `bob_sessions/` and linked.
 
 ## Next step
-1. T11 HTML timeline (`kairos report --html`), then T12 assets. For the video: a real PR on a pushed copy of the demo to show the Action's PR comment (not exercised yet).
+1. Push T11 and check CI. Then T12 assets (README with a timeline screenshot, slides, video script, cover). For the video: a real PR on a pushed copy of the demo to show the Action's PR comment (not exercised yet).
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).
@@ -22,6 +22,7 @@ Nothing. Screenshots of all Bob tasks 01–13 are in `bob_sessions/` and linked.
 - Everything in the repo is English (judges). Chat with the user in Russian.
 - Bob CLI flag is `--mode`, not `--chat-mode`.
 - Never run `demo/scripts/reset.sh` before copying `demo/.work/orders-api/.kairos/runs/` of real runs into `bob_sessions/cli/` (reset deletes them; Bob Shell's own logs in `~/.bob/logs/shell/` are the backup).
+- The built-in browser can't screenshot `file://` pages: serve the HTML with `python3 -m http.server` and open localhost.
 - `gh` is not installed locally; check CI via `curl https://api.github.com/repos/OnixFireOne/ibm-kairos/actions/runs?per_page=1`.
 - Run prettier from the repo root only (from `packages/cli` it misses `.prettierignore` and rewrites `.md` snapshots).
 - `pnpm test` must stay green at every commit, so tests + implementation land together. Before committing run root `pnpm lint` (tsc + prettier), not only `tsc`.
