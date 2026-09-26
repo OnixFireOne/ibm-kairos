@@ -36,6 +36,11 @@
   .flow { display: flex; align-items: center; gap: 22px; margin: 40px 0 60px; font-size: 34px; }
   .flow span.s { background: #111b44; border: 1px solid #2a3a73; border-radius: 16px; padding: 22px 28px; }
   .flow span.a { color: #7cc4ff; font-size: 44px; } .flow span.bob { border-color: #4589ff; color: #fff; background: #13235e; }
+  /* On screen: scale each 1920x1080 slide to the window width (print/PDF keeps the real size). */
+  @media screen {
+    html, body { background: #050919; }
+    section { zoom: var(--fit, 0.5); margin: 0 auto 40px; border-radius: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -156,5 +161,9 @@ KRS-004  <span class="sev-m">medium</span>  MISSING_TEST           src/routes/or
   <div class="num">9</div>
 </section>
 
+<script>
+  const fit = () => document.documentElement.style.setProperty('--fit', Math.min(1, (innerWidth - 40) / 1920));
+  addEventListener('resize', fit); fit();
+</script>
 </body>
 </html>
