@@ -1,0 +1,28 @@
+Task T3 of the Kairos project (see PLAN.md, SPEC.md §6.2): implement intent context selection.
+
+Create exactly these four files in `packages/cli/src/context/`: `glob.ts`, `sections.ts`, `intent.ts`, `select.ts`.
+The contract is `packages/cli/src/context/types.ts`. The specification is `packages/cli/test/context.test.ts` and `packages/cli/test/builder.test.ts` (currently red). `prompt.ts` and `builder.ts` already exist and use your modules.
+
+Hard constraints:
+- Do NOT modify `types.ts`, `prompt.ts`, `builder.ts`, anything under `packages/cli/test/`, or any other file.
+- No new dependencies: use `fast-glob` for file globbing and write the glob matcher yourself. TypeScript strict, ESM (`.js` import suffixes), small pure functions, English comments only where non-obvious.
+- To save cost: while iterating run only `npx vitest run test/context.test.ts test/builder.test.ts` inside `packages/cli`. Run `pnpm test` and `pnpm lint` from the repo root once at the end (run `pnpm format` if prettier complains). Stop when both pass.
+
+Exports:
+- glob.ts: `matchesGlob(path: string, glob: string): boolean` for posix paths. `**/` matches zero or more directories, a trailing `**` matches anything, `*` matches within one segment, `?` one non-slash char, everything else literal.
+- sections.ts: `splitMarkdown(file: string, text: string): Section[]`.
+- intent.ts: `loadIntentFiles(cwd: string, patterns: { intent: string[]; tests: string[] }): Promise<IntentFile[]>`.
+- select.ts: `isSearchable(symbol: ChangedSymbol): boolean` and
+  `selectContext(diff: { files: FileDiff[]; symbols: ChangedSymbol[] }, intent: IntentFile[], opts: { map: Record<string, string[]>; maxChars: number }): ContextSelection`.
+
+Rules:
+1. Lines are 1-based; a trailing newline does not create an extra line. Excerpt `text` = source lines startLine..endLine joined with '\n'.
+2. splitMarkdown: ATX headings `#`..`######` followed by a space; lines inside ``` or ~~~ fences are never headings. Text before the first heading becomes a level-0 section with heading '' starting at its first non-blank line (none if it is all blank). `endLine` = last non-blank line before the next heading of any level; `blockEnd` = last non-blank line before the next heading of the same or a higher level (smaller or equal number), or before end of file.
+3. loadIntentFiles: fast-glob with `cwd`, ignoring `**/node_modules/**`, `**/.git/**`, `**/.kairos/**`; union of both pattern lists, unique, sorted by path (plain string order). kind: 'test' if matched by a tests pattern, else 'markdown' for `.md`, else 'other'.
+4. isSearchable: env and route symbols always; function and class when the name has at least 3 characters; const only when at least 4 characters and either UPPER_CASE (letters, digits, underscores, at least one letter) or camelCase (a lowercase letter directly followed by an uppercase letter).
+5. Map: for each map glob that matches at least one changed file path (`diff.files[].path`), for each target: `path#Heading` selects the markdown section of that file whose heading equals Heading case-insensitively, as an excerpt from its startLine to its blockEnd; a bare `path` selects the whole file (line 1 to the last line). Targets that do not exist are ignored. Reason: `map:<glob>`.
+6. Symbols: for each searchable symbol build a case-sensitive pattern. Non-route names are whole words (`\bNAME\b`). Routes use only the path part after the method, as a literal where each `:param` also matches `{param}`, and the match must not be followed by a word character, `/`, `{` or `-`. Markdown files: every section (flat startLine..endLine) containing a match becomes an excerpt with that section's heading. Other files (including tests): every matching line L gives a window from max(1, L-10) to min(lastLine, L+10) with heading null. Reason: `symbol:<symbol name>`.
+7. Merge excerpts of the same file whose line ranges overlap (not merely adjacent) into their union, repeating until stable. Reasons: union, unique, sorted. Heading: the heading of the excerpt with the smallest startLine (on a tie, the longer one); null if that one has none.
+8. Budget: priority order = excerpts with any `map:` reason first, then more distinct `symbol:` reasons first, then file (plain string order), then startLine. Walk in that order: include an excerpt if the running total of text lengths plus its length is <= maxChars, otherwise put it in `omitted` and continue. Return `excerpts` sorted by file then startLine, `omitted` in priority order, `chars` = total text length of `excerpts`.
+
+Finish with a short summary: what you implemented, test and lint results, anything you were unsure about.

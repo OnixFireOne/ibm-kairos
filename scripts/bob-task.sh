@@ -11,7 +11,10 @@ mkdir -p "$root/bob_sessions/prompts" "$root/bob_sessions/cli"
 cp "$prompt" "$root/bob_sessions/prompts/$name.txt" 2>/dev/null || true
 bob run --trust --mode "$mode" --format json --max-cost "$cost" --max-turns "$turns" < "$prompt" > "$out"
 node -e '
-const d = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+// Output is one JSON object per line; an "error" line (e.g. cost limit) may precede the result.
+const events = require("fs").readFileSync(process.argv[1], "utf8").trim().split("\n").map((l) => JSON.parse(l));
+for (const e of events.filter((e) => e.type === "error")) console.log(`ERROR: ${e.message}`);
+const d = events.find((e) => e.type === "result");
 console.log(`status=${d.status} task_id=${d.stats.task_id} cost=${d.stats.session_costs} tools=${d.stats.tool_calls}`);
 console.log(d.last_message);
 ' "$out"
