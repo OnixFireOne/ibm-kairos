@@ -12,12 +12,13 @@ Evidence of IBM Bob usage, as required by the hackathon guide.
 | 01b | Bob Shell (`bob run`, `kairos` mode) | Verified the custom `kairos` mode loads | 0.010 | — |
 | 02 | Bob Shell (`bob run`, agent) | Implemented the git diff collector (`packages/cli/src/collector/diff.ts`) against tests written first by Claude Code; 22/22 green | 1.293 | [kairos_task02_diff_collector.png](kairos_task02_diff_collector.png) |
 | 03 | Bob Shell (`bob run`, agent) | Implemented intent context selection (`packages/cli/src/context/{glob,sections,intent,select}.ts`) against tests written first by Claude Code. Hit the 2.00 cost cap while chasing a wrong expectation in Claude's test (a missed match on line 30 of a fixture); the implementation itself was correct. Claude fixed the test and reverted Bob's last workaround; 55/55 green | 2.082 | [kairos_task03_context_selection.png](kairos_task03_context_selection.png) |
-| 04 | Bob Shell via `kairos check` (`kairos` mode, product runtime) | Checked demo drifts A/B/C on `demo/orders-api`: found all three (SPEC_VIOLATION, STALE_DOC, UNDOCUMENTED_BEHAVIOR) plus MISSING_TEST for B, with exact line evidence on both sides; 8 tool calls. Raw: `cli/20260926T100010Z-task04-check-demo-abc.json`, report: `demo/sample-report.md` | 0.091 | pending |
-| 05 | Bob Shell via `kairos check` (`kairos` mode) | Control commit (doc typo fix): no drift reported, no false positives; 1 tool call | 0.026 | pending |
+| 04 | Bob Shell via `kairos check` (`kairos` mode, product runtime) | Checked demo drifts A/B/C on `demo/orders-api`: found all three (SPEC_VIOLATION, STALE_DOC, UNDOCUMENTED_BEHAVIOR) plus MISSING_TEST for B, with exact line evidence on both sides; 8 tool calls. Raw: `cli/20260926T100010Z-task04-check-demo-abc.json`, report: `demo/sample-report.md` | 0.091 | [kairos_task04_check_demo_abc.png](kairos_task04_check_demo_abc.png) |
+| 05 | Bob Shell via `kairos check` (`kairos` mode) | Control commit (doc typo fix): no drift reported, no false positives; 1 tool call | 0.026 | [kairos_task05_check_demo_control.png](kairos_task05_check_demo_control.png) |
 
 ## How Bob is driven during development
 
 Development is orchestrated from **Claude Code**, which calls **IBM Bob Shell headless** (`scripts/bob-task.sh` → `bob run --format json`) for Bob tasks. This is the same path the product's `BobEngine` uses, so every dev task also tests Kairos's runtime integration with Bob (auth, modes, JSON output, cost caps).
 
 - Prompts: `prompts/<task>.txt`. Raw results: `cli/<timestamp>-<task>.json` (status, task id, Bobcoins, tool calls, final message).
+- Product-runtime runs (`kairos check`/`fix`) run Bob inside the checked repo, so they show up in Bob IDE under that repo's workspace (e.g. `orders-api`), not `ibm-kairos`.
 - Bob Shell and Bob IDE share task history on the same machine, so each task also appears in Bob IDE → Tasks, where the consumption summary screenshot is taken.

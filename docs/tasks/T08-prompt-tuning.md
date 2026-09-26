@@ -26,4 +26,4 @@ Status: [x] · Owner: Claude Code + IBM Bob (runtime) · Commits: see `git log -
 - Fixture keys depended on commit shas (see above).
 
 ## Result
-Total 0.117 Bobcoins for both runs. 89 tests green, lint clean. Screenshots for tasks 04 and 05 pending (user).
+Total 0.117 Bobcoins for both runs. 89 tests green, lint clean. Screenshots: `bob_sessions/kairos_task0{4,5}_*.png` (Bob IDE workspace `orders-api`).
