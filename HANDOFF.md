@@ -1,9 +1,9 @@
 # Handoff
 
-Updated: 2026-09-26 ~21:45 Astana, T9 real run done, T13 + T14 done. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~22:00 Astana, T10 done (hook, Action, CI green on GitHub). Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report, T7 demo repo + drift scripts, T8 real Bob on the demo (A/B/C found, control clean, fixtures recorded), T9 `kairos fix` incl. the real Bob run on the demo (A/B/C fixed, clean re-check, fixtures recorded; see `docs/tasks/T09-fix-flow.md`), T13 living docs scaffold (`init` → `docs/kairos/`, CLAUDE/AGENTS pointers, post-commit hook → `kairos progress`, `fix` → DECISIONS.md; see `docs/tasks/T13-living-docs.md`), T14 handoff + freshness (`kairos handoff`, `kairos session` budget, freshness candidates in `check`, `kairos-dev` runs init/check and fixes findings itself; see `docs/tasks/T14-handoff-freshness.md`). 142 tests green, lint clean, pushed to `main` on github.com/OnixFireOne/ibm-kairos.
+- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report, T7 demo repo + drift scripts, T8 real Bob on the demo (A/B/C found, control clean, fixtures recorded), T9 `kairos fix` incl. the real Bob run on the demo (A/B/C fixed, clean re-check, fixtures recorded; see `docs/tasks/T09-fix-flow.md`), T13 living docs scaffold (`init` → `docs/kairos/`, CLAUDE/AGENTS pointers, post-commit hook → `kairos progress`, `fix` → DECISIONS.md; see `docs/tasks/T13-living-docs.md`), T14 handoff + freshness (`kairos handoff`, `kairos session` budget, freshness candidates in `check`, `kairos-dev` runs init/check and fixes findings itself; see `docs/tasks/T14-handoff-freshness.md`), T10 integrations (`kairos hook install` pre-push, `action.yml`, `.github/workflows/ci.yml` runs the Action on the demo, demo workflow; see `docs/tasks/T10-integrations.md`). 150 tests green, lint clean, pushed to `main` on github.com/OnixFireOne/ibm-kairos.
 - Bobcoins spent: 4.85 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
@@ -11,7 +11,7 @@ Nothing. Screenshots of Bob tasks 06–13 are pending from the user (ids in `bob
 
 ## Next step
 1. When the user drops the screenshots for tasks 06–13 into `../shots/`: rename, link in `bob_sessions/README.md`, commit.
-2. T10 integrations (`kairos hook install` pre-push running `check`, `action.yml`, demo workflow), then T11 HTML timeline, then T12 assets.
+2. T11 HTML timeline (`kairos report --html`), then T12 assets. For the video: a real PR on a pushed copy of the demo to show the Action's PR comment (not exercised yet).
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).
@@ -22,6 +22,7 @@ Nothing. Screenshots of Bob tasks 06–13 are pending from the user (ids in `bob
 - Everything in the repo is English (judges). Chat with the user in Russian.
 - Bob CLI flag is `--mode`, not `--chat-mode`.
 - Never run `demo/scripts/reset.sh` before copying `demo/.work/orders-api/.kairos/runs/` of real runs into `bob_sessions/cli/` (reset deletes them; Bob Shell's own logs in `~/.bob/logs/shell/` are the backup).
+- `gh` is not installed locally; check CI via `curl https://api.github.com/repos/OnixFireOne/ibm-kairos/actions/runs?per_page=1`.
 - Run prettier from the repo root only (from `packages/cli` it misses `.prettierignore` and rewrites `.md` snapshots).
 - `pnpm test` must stay green at every commit, so tests + implementation land together. Before committing run root `pnpm lint` (tsc + prettier), not only `tsc`.
 

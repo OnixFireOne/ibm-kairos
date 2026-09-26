@@ -1,5 +1,5 @@
 # T10 Integrations
-Status: [~] in progress (CI run on GitHub pending) · Owner: Claude Code · Commits: see `git log --grep T10`
+Status: [x] done · Owner: Claude Code · Commits: see `git log --grep T10`
 
 ## Goal
 Run `kairos check` where drift should be caught without anyone remembering to: before `git push` and on every pull request (report as a PR comment).
@@ -23,4 +23,4 @@ Run `kairos check` where drift should be caught without anyone remembering to: b
 ## Result
 - `test/hook.test.ts` (8 tests): hook content, install/idempotent/update, foreign hook kept, uninstall, no git repo, and the installed hook run with `sh` against a fake kairos (exit 0 → push, 1 → blocked, 2 → warn + push). 150 tests green, lint clean.
 - Smoke on the demo (built CLI, mock): `hook install --engine mock`, drifts A/B/C, `git push` to a local bare remote → 4 findings, "push blocked", exit 1; `hook uninstall` removes it.
-- The Action itself is verified only by the `action-demo` CI job on GitHub (PR comment path not exercised: needs a PR).
+- GitHub CI run 36256696762 on `8e6f421`: `test` and `action-demo` green (the Action built Kairos, found drift on the demo, exit-code 1). The PR comment path is not exercised yet: needs a real PR (candidate for the video).
