@@ -1,16 +1,16 @@
 # Handoff
 
-Updated: 2026-09-26 ~14:35 Astana, after T5. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~14:45 Astana, after T6. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache). 78 tests green, lint clean, all pushed to `main` on github.com/OnixFireOne/ibm-kairos.
+- Done: T0 scaffold, T1 config + `kairos init`, T2 diff collector (Bob), T3 context selection (Bob) + prompt renderer, T4 report schema + reply parser, T5 engines (Bob/mock/cache), T6 `kairos check` + Markdown report. 86 tests green, lint clean, all pushed to `main` on github.com/OnixFireOne/ibm-kairos.
 - Bobcoins spent: 3.61 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
 Nothing. Working tree clean.
 
 ## Next step
-T6 `check` command + Markdown reporter (Claude Code, no Bob): wire `getDiff` → context builder → `createEngine(config, …)` → `parseWithRepair(text, repairWith(engine))` → `DriftReport`; see PLAN T6 and the T05 decisions for the engine API. Then T7 demo repo.
+T7 demo repo `demo/orders-api` (see PLAN T7, SPEC §4 drifts A/B/C). Then T8 prompt tuning with real Bob: record replies as fixtures via `fixtureName(prompt)` into `demo/orders-api/.kairos/fixtures/`. `kairos check` API and exit codes: `docs/tasks/T06-check-command.md`.
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).
@@ -27,4 +27,4 @@ T6 `check` command + Markdown reporter (Claude Code, no Bob): wire `getDiff` →
 - Every task: create/update its `docs/tasks/TNN-*.md` (spec, decisions, problems, result); keep `SPEC.md` for the stable product picture.
 
 ## Last check
-No `kairos check` run yet (T6).
+No real `kairos check` run yet (only mock, in tests). First real one comes with T7/T8 on the demo repo.
