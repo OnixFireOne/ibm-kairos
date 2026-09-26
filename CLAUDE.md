@@ -5,6 +5,7 @@ Hackathon project (IBM Bob 2.0, lablab.ai). Deadline: **Sun Sep 27, 2026 15:00 U
 Before doing anything read `HANDOFF.md` (current state, next step, gotchas), then `SPEC.md` (what/why/architecture) and `PLAN.md` (tasks with statuses). After each task update `PLAN.md` statuses and `HANDOFF.md`.
 
 ## Rules
+- At a milestone or when the session gets long, refresh `HANDOFF.md` (and PLAN/SPEC) and tell the user: "Good moment to start a new chat. Handoff is in HANDOFF.md."
 - Everything in the repo is in English (code, comments, docs, commits, Bob prompts): judges are English-speaking.
 - IBM Bob is the runtime engine of the product (`bob run --mode kairos --format json`). Never replace it with another LLM.
 - Develop and test against `MockEngine`. Don't run real `bob` commands unless explicitly asked: they cost limited Bobcoins.
