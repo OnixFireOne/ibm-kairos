@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Source of cover.png (1920x1080). Render: Chrome --headless --window-size=1920,1080 --screenshot -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    background: #0b1230;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    color: #e6ecff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .banner { width: 1600px; height: 600px; background: url('../../brand/kairos_banner_1600x600.png');
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent), linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-composite: source-in; }
+  .sub { margin-top: 10px; font-size: 44px; font-weight: 600; letter-spacing: 0.5px; }
+  .sub b { color: #7cc4ff; }
+  .chips { margin-top: 48px; display: flex; gap: 22px; }
+  .chip { font-family: Menlo, monospace; font-size: 28px; padding: 14px 26px; border-radius: 14px;
+    border: 1px solid #2a3a73; background: #111b44; color: #b9ccff; }
+  .foot { position: absolute; bottom: 44px; font-size: 24px; color: #6f81b8; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+  <div class="banner"></div>
+  <div class="sub">Intent-drift guardian and living docs, powered by <b>IBM Bob</b></div>
+  <div class="chips">
+    <div class="chip">kairos check</div>
+    <div class="chip">kairos fix</div>
+    <div class="chip">kairos handoff</div>
+    <div class="chip">GitHub Action</div>
+  </div>
+  <div class="foot">IBM Bob 2.0 Hackathon · lablab.ai · 2026</div>
+</body>
+</html>

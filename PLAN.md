@@ -57,7 +57,7 @@ Each task: small PR/commit, tests green, no secrets.
 - [x] **T11 HTML timeline.** [→ task file](docs/tasks/T11-html-timeline.md) `kairos report --html` → single-file `kairos-timeline.html` from `.kairos/history`: runs over time, findings opened/resolved, severity colours, logo.
 - [x] **T13 Living docs scaffold.** [→ task file](docs/tasks/T13-living-docs.md) `kairos init` creates `docs/kairos/{SPEC,PLAN,PROGRESS,DECISIONS,HANDOFF}.md` + `docs/kairos/tasks/README.md` (per-task file format) from templates, plus pointer blocks (between `<!-- kairos:start/end -->` markers) in `CLAUDE.md` and `AGENTS.md`, plus the `kairos-dev` mode in `.bob/custom_modes.yaml`. `post-commit` hook → `PROGRESS.md` entry (hash, message, files). `kairos fix` appends to `DECISIONS.md`. Tests.
 - [x] **T14 Handoff + freshness.** [→ task file](docs/tasks/T14-handoff-freshness.md) `kairos handoff` (git log since the last handoff + PLAN status + the last report → Bob drafts `HANDOFF.md` by template; mock for tests). Docs-freshness candidates in `check` (SPEC §6.2.1). `kairos session "<task>"` wraps `bob run --mode kairos-dev --format json`, sums turns/cost per session in `.kairos/session.json`, and runs a handoff with the "start a new chat" message over the threshold. Recommend a new chat only when needed (area switch with a clean tree, or over budget), never after every task.
-- [ ] **T12 Submission assets.** README (pitch, GIF/screenshots, quickstart, "How Kairos uses IBM Bob" section, architecture diagram), `docs/slides.md`, video script, cover 16:9.
+- [~] **T12 Submission assets.** [→ task file](docs/tasks/T12-submission-assets.md) README (pitch, GIF/screenshots, quickstart, "How Kairos uses IBM Bob" section, architecture diagram), `docs/slides.{html,pdf}`, `docs/video-script.md`, cover 16:9, `docs/submission.md`. Left: video, PR comment on a real PR, form.
 
 ## Video script (≈3 min)
 1. (20s) Problem: code drifts from intent; nobody notices until it hurts.
@@ -68,11 +68,11 @@ Each task: small PR/commit, tests green, no secrets.
 5. (20s) What's next: IDE-native nudges at the moment of edit, more languages, org-wide drift dashboard.
 
 ## Submission checklist
-- [ ] Public GitHub repo, MIT license, README complete.
-- [ ] `bob_sessions/`: a PNG screenshot of **every** Bob task's consumption summary (Bob IDE → Tasks → open task → header), named `kairos_taskXX_description.png`. **Take them as you go**, not at the end. No API keys or credentials anywhere.
-- [ ] Metrics table (SPEC §2.2) filled with real numbers from the demo, in the README and slides.
+- [x] Public GitHub repo, MIT license, README complete.
+- [x] `bob_sessions/`: a PNG screenshot of **every** Bob task's consumption summary (Bob IDE → Tasks → open task → header), named `kairos_taskXX_description.png`. **Take them as you go**, not at the end. No API keys or credentials anywhere.
+- [x] Metrics table (SPEC §2.2) filled with real numbers from the demo, in the README and slides.
 - [ ] Video (YouTube/Loom, public or unlisted).
-- [ ] Slides (PDF).
-- [ ] Cover image + logo.
-- [ ] Short and long descriptions (reuse `brand/team_description.md`).
+- [x] Slides (PDF): `docs/slides.pdf`.
+- [x] Cover image + logo: `docs/assets/cover.png`.
+- [x] Short and long descriptions (`docs/submission.md`) (reuse `brand/team_description.md`).
 - [ ] Technologies tagged: IBM Bob, Bob Shell (+ watsonx.ai if used).

@@ -1,17 +1,18 @@
 # Handoff
 
-Updated: 2026-09-26 ~22:15 Astana, T11 done (`kairos report --html` timeline). Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-26 ~23:00 Astana, T12 assets done except the video and the PR comment. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
-- Done: T0–T11, T13, T14 (details: `PLAN.md` and `docs/tasks/`). Last: T11 HTML timeline (`kairos report [--html] [--out]`, single self-contained page; see `docs/tasks/T11-html-timeline.md`).
-- 161 tests green, lint clean. T10 CI green on GitHub; T11 pushed.
-- Bobcoins spent: 4.85 / 40 (details: `bob_sessions/README.md`).
+- Done: T0–T11, T13, T14 (details: `PLAN.md` and `docs/tasks/`). T12 `[~]`: README rewritten, `docs/assets/{cover,timeline}.png`, `docs/slides.pdf`, `docs/video-script.md`, `docs/submission.md` (form texts). See `docs/tasks/T12-submission-assets.md`.
+- 161 tests green, lint clean. Bobcoins spent: 4.85 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
-Nothing. Screenshots of all Bob tasks 01–13 are in `bob_sessions/` and linked.
+T12, parts that need the user.
 
 ## Next step
-1. T12 assets (README with a timeline screenshot, slides, video script, cover). For the video: a real PR on a pushed copy of the demo to show the Action's PR comment (not exercised yet).
+1. PR comment evidence: push a copy of the demo (after `reset.sh` + drifts A/B/C) to a new public GitHub repo with the workflow from `demo/orders-api/.github/workflows/kairos.yml`, open a PR `feature/orders-update` → `main`, screenshot the Kairos comment (for the video).
+2. Record the video by `docs/video-script.md` (rehearse on mock; live Bob ≈0.7 Bobcoins), upload, put the URL into `docs/submission.md`.
+3. Fill the lablab form from `docs/submission.md`, final secret check of the repo, mark T12 `[x]`.
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).

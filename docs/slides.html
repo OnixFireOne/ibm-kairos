@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- Source of slides.pdf. Render from the repo root:
+     "<Chrome>" --headless --no-pdf-header-footer --print-to-pdf=docs/slides.pdf file://$PWD/docs/slides.html -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Kairos: catch the moment code drifts from intent</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0b1230; }
+  body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; color: #e6ecff;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  section { width: 1920px; height: 1080px; padding: 110px 140px; position: relative; overflow: hidden;
+    page-break-after: always; break-after: page;
+    background: radial-gradient(ellipse at 70% 20%, #16245a 0%, #0b1230 60%); }
+  section.img { padding: 0; }
+  section.img img { width: 1920px; height: 1080px; display: block; }
+  h1 { font-size: 76px; margin: 0 0 50px; letter-spacing: -0.5px; }
+  h1 small { display: block; font-size: 34px; font-weight: 500; color: #7cc4ff; margin-top: 18px; letter-spacing: 0; }
+  p, li { font-size: 38px; line-height: 1.45; color: #cdd8ff; }
+  ul { margin: 0; padding-left: 44px; } li { margin-bottom: 18px; }
+  b, strong { color: #ffffff; } .hi { color: #7cc4ff; }
+  code { font-family: Menlo, monospace; font-size: 0.85em; color: #b9ccff; background: #111b44;
+    border: 1px solid #2a3a73; padding: 2px 10px; border-radius: 8px; }
+  pre { font-family: Menlo, monospace; font-size: 27px; line-height: 1.5; background: #070c22; color: #cdd8ff;
+    border: 1px solid #2a3a73; border-radius: 18px; padding: 34px 40px; margin: 0; white-space: pre; }
+  .sev-h { color: #ff5b6b; } .sev-m { color: #ff9a3c; } .ok { color: #42be65; } .dim { color: #6f81b8; }
+  table { border-collapse: collapse; width: 100%; font-size: 32px; }
+  td, th { text-align: left; padding: 18px 22px; border-bottom: 1px solid #25336a; vertical-align: top; }
+  th { color: #7cc4ff; font-weight: 600; } td b { font-size: 36px; }
+  .cols { display: flex; gap: 60px; } .cols > div { flex: 1; }
+  .card { background: #0f1940; border: 1px solid #2a3a73; border-radius: 22px; padding: 34px 40px; }
+  .card h3 { font-size: 40px; margin: 0 0 16px; color: #fff; } .card p { font-size: 32px; margin: 0; }
+  .num { position: absolute; right: 70px; bottom: 50px; font-size: 24px; color: #4a5a90; }
+  .flow { display: flex; align-items: center; gap: 22px; margin: 40px 0 60px; font-size: 34px; }
+  .flow span.s { background: #111b44; border: 1px solid #2a3a73; border-radius: 16px; padding: 22px 28px; }
+  .flow span.a { color: #7cc4ff; font-size: 44px; } .flow span.bob { border-color: #4589ff; color: #fff; background: #13235e; }
+</style>
+</head>
+<body>
+
+<section class="img"><img src="assets/cover.png" alt="Kairos"></section>
+
+<section>
+  <h1>The problem<small>Code drifts from intent, silently</small></h1>
+  <ul>
+    <li>Code changes every day. <b>Specs, API contracts, READMEs and tests</b> rarely keep up.</li>
+    <li>Linters check syntax. Tests check what someone remembered to test.</li>
+    <li><b>Nothing checks that a change still matches the intent</b>, until it becomes an incident, a broken onboarding or a wrong decision.</li>
+    <li>With coding agents the code moves even faster, and every new chat starts without the history.</li>
+  </ul>
+  <div class="num">2</div>
+</section>
+
+<section>
+  <h1>Kairos<small>An intent-drift guardian powered by IBM Bob</small></h1>
+  <div class="flow">
+    <span class="s">git diff</span><span class="a">→</span>
+    <span class="s">intent sections<br><span class="dim" style="font-size:26px">SPEC · OpenAPI · README · tests</span></span><span class="a">→</span>
+    <span class="s bob">IBM Bob<br><span class="dim" style="font-size:26px">kairos mode</span></span><span class="a">→</span>
+    <span class="s">Drift Report</span><span class="a">→</span>
+    <span class="s bob">Bob fixes<br><span class="dim" style="font-size:26px">kairos-fix mode</span></span>
+  </div>
+  <ul>
+    <li>Every finding has <b>evidence on both sides</b> (file:line), a severity and a proposed resolution.</li>
+    <li>Kairos <b>does not assume the code is right</b>: for each finding, which side is the truth?</li>
+    <li>Runs where drift should be caught: <code>kairos check</code>, pre-push hook, GitHub Action with a PR comment.</li>
+  </ul>
+  <div class="num">3</div>
+</section>
+
+<section>
+  <h1>Demo: three ordinary commits<small>demo/orders-api: Express + TS, docs/SPEC.md, openapi.yaml, README, tests</small></h1>
+<pre><span class="dim">$ kairos check</span>
+KRS-001  <span class="sev-h">high  </span>  SPEC_VIOLATION         src/pricing.ts:8      discount 10% → 15%, SPEC not updated
+KRS-002  <span class="sev-h">high  </span>  STALE_DOC              src/config.ts:8-9     README + SPEC still say DB_URL
+KRS-003  <span class="sev-m">medium</span>  UNDOCUMENTED_BEHAVIOR  src/routes/orders.ts  DELETE /orders/:id not in OpenAPI
+KRS-004  <span class="sev-m">medium</span>  MISSING_TEST           src/routes/orders.ts  DELETE /orders/:id has no test
+
+4 finding(s), 4 at or above medium.   <span class="sev-h">exit 1: push blocked</span></pre>
+  <p style="margin-top:44px"><b>3/3 seeded drifts found</b>, plus the missing test. <b>0 false positives</b> on a control commit (a doc typo fix).</p>
+  <div class="num">4</div>
+</section>
+
+<section>
+  <h1>Fix: the right side of the truth<small>kairos fix --id &lt;ID&gt; --truth intent|code</small></h1>
+  <div class="cols">
+    <div class="card"><h3>C · env rename</h3><p>The rename is intended → <b>docs follow the code</b>. Bob updates README and SPEC.</p><p class="dim" style="margin-top:20px">11 s · 0.058 Bobcoins</p></div>
+    <div class="card"><h3>B · new endpoint</h3><p>Intended → Bob <b>documents it</b> in SPEC and OpenAPI and <b>writes 2 tests</b>.</p><p class="dim" style="margin-top:20px">26 s · 0.138 Bobcoins</p></div>
+    <div class="card"><h3>A · discount</h3><p>Breaks a rule owned by Finance → <b>the spec wins</b>; Bob puts the code and tests back to 10%.</p><p class="dim" style="margin-top:20px">28 s · 0.221 Bobcoins</p></div>
+  </div>
+  <p style="margin-top:50px">Each fix: Bob edits → you see the diff and confirm → Kairos commits, logs the decision in <code>DECISIONS.md</code>, re-checks. Docs-only by default; code only with <code>--allow-code</code>.</p>
+  <div class="num">5</div>
+</section>
+
+<section style="display:flex; gap:70px; align-items:center">
+  <div style="flex:1">
+    <h1>Every Kairos moment<small>kairos report --html</small></h1>
+    <p>A single self-contained page: when drift appeared, when it was resolved, what it cost.</p>
+    <p>Last run: Bob noticed its own new endpoint returns a JSON 404 body the contract doesn't declare. <b>Low severity, below the threshold</b>: the check passes, the finding stays visible.</p>
+  </div>
+  <img src="assets/timeline.png" style="width:900px; border-radius:18px; border:1px solid #2a3a73">
+  <div class="num">6</div>
+</section>
+
+<section>
+  <h1>Living docs: continuity between sessions<small>kairos init · kairos-dev mode · kairos handoff</small></h1>
+  <ul>
+    <li><code>docs/kairos/</code>: SPEC, PLAN, PROGRESS, DECISIONS, one file per task, <b>HANDOFF</b>.</li>
+    <li>Pointers in the Bob mode, <code>CLAUDE.md</code> and <code>AGENTS.md</code>: <b>every agent reads HANDOFF first</b>. A new chat starts with "continue".</li>
+    <li>A post-commit hook logs progress; <code>kairos fix</code> logs decisions; <code>check</code> flags stale docs.</li>
+    <li>Unlike context compaction: explicit, reviewed in git, shared by Bob, Claude Code and Codex.</li>
+    <li><b>Dogfooded:</b> Kairos was built this way. HANDOFF (3.8k chars) + one task file instead of ~70k chars of docs.</li>
+  </ul>
+  <div class="num">7</div>
+</section>
+
+<section>
+  <h1>How IBM Bob powers it</h1>
+  <div class="cols">
+    <div>
+      <ul>
+        <li><code>bob run --mode kairos --format json</code> with <code>--max-cost</code> and <code>--max-turns</code></li>
+        <li><b>4 custom modes</b>: kairos (read-only), kairos-fix (docs/tests via <code>fileRegex</code>), kairos-fix-code, kairos-dev</li>
+        <li><b>Whole-repo understanding</b>: Bob opens the code it needs (8 tool calls on A/B/C, 1 on the control)</li>
+        <li><b>Document understanding</b>: Markdown specs, OpenAPI, READMEs, tests</li>
+        <li><b>Agent mode</b> for fixes; same path in CI via the Action</li>
+      </ul>
+    </div>
+    <div>
+      <table>
+        <tr><th>On the demo, real Bob</th><th></th></tr>
+        <tr><td>Drifts caught / false positives</td><td><b>3/3 · 0</b></td></tr>
+        <tr><td>One check</td><td><b>20–35 s</b>, 0.03–0.18 Bobcoins</td></tr>
+        <tr><td>Cached rerun</td><td><b>0</b> Bobcoins</td></tr>
+        <tr><td>Each fix</td><td><b>11–28 s</b></td></tr>
+        <tr><td>Check → 3 fixes → pass</td><td><b>5.5 min</b>, 1.12 Bobcoins</td></tr>
+        <tr><td>Whole hackathon</td><td><b>4.85 / 40</b> Bobcoins</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="num">8</div>
+</section>
+
+<section>
+  <h1>What's next</h1>
+  <ul>
+    <li><b>Nudges inside the IDE</b> at the moment of the edit, not only at push time.</li>
+    <li>Fan a large check out to <b>Bob subagents</b>, one per intent area.</li>
+    <li>More languages beyond JS/TS.</li>
+    <li>An <b>org-wide drift dashboard</b>: which intents drift, where, how fast they come back.</li>
+  </ul>
+  <p style="margin-top:70px; font-size:44px"><b>Kairos</b> <span class="hi">· catch the moment code drifts from intent</span></p>
+  <p class="dim">github.com/OnixFireOne/ibm-kairos · MIT</p>
+  <div class="num">9</div>
+</section>
+
+</body>
+</html>

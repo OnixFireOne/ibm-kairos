@@ -3,3 +3,7 @@ dist/
 bob_sessions/
 fixtures/
 *.md
+
+# Render sources for slides.pdf and cover.png (hand-laid-out)
+docs/slides.html
+docs/assets/cover.html
