@@ -8,11 +8,10 @@ Updated: 2026-09-26 ~22:00 Astana, T10 done (hook, Action, CI green on GitHub). 
 - Bobcoins spent: 4.85 / 40 (details: `bob_sessions/README.md`).
 
 ## In progress
-Nothing. Screenshots of Bob tasks 06–13 are pending from the user (ids in `bob_sessions/README.md`, rows marked `pending`).
+Nothing. Screenshots of all Bob tasks 01–13 are in `bob_sessions/` and linked.
 
 ## Next step
-1. When the user drops the screenshots for tasks 06–13 into `../shots/`: rename, link in `bob_sessions/README.md`, commit.
-2. T11 HTML timeline (`kairos report --html`), then T12 assets. For the video: a real PR on a pushed copy of the demo to show the Action's PR comment (not exercised yet).
+1. T11 HTML timeline (`kairos report --html`), then T12 assets. For the video: a real PR on a pushed copy of the demo to show the Action's PR comment (not exercised yet).
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).
