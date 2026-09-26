@@ -1,0 +1,24 @@
+# Kairos on every pull request: checks the diff against docs/SPEC.md, openapi.yaml and README.md
+# and posts the drift report as a PR comment.
+name: Kairos
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  kairos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # kairos diffs base...HEAD and needs the merge base
+      - uses: OnixFireOne/ibm-kairos@main
+        with:
+          # `mock` replays the recorded Bob replies in .kairos/fixtures (free).
+          # For live IBM Bob: install Bob Shell in a step above, set engine: bob and
+          # bob-api-key: ${{ secrets.BOB_API_KEY }}
+          engine: mock

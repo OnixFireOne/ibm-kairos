@@ -1,0 +1,114 @@
+name: Kairos intent-drift check
+description: 'Run `kairos check` on a pull request and post the drift report as a PR comment. Check out with `fetch-depth: 0`. Powered by IBM Bob.'
+author: OnixFireOne
+branding:
+  icon: clock
+  color: purple
+
+inputs:
+  engine:
+    description: '`mock` replays recorded replies (free, no Bob needed). `bob` runs IBM Bob Shell: install `bob` in an earlier step and pass `bob-api-key`.'
+    default: mock
+  base:
+    description: Git base ref to diff against. Default on pull requests is `origin/<base branch>`, otherwise the config `base`.
+    default: ''
+  working-directory:
+    description: Repository root to check (the folder with `.kairos/config.yaml`).
+    default: .
+  comment:
+    description: Post or update one Kairos comment on the pull request.
+    default: 'true'
+  fail-on-drift:
+    description: Fail the job when a finding reaches `failOn`.
+    default: 'true'
+  github-token:
+    description: 'Token for the PR comment (needs `pull-requests: write`).'
+    default: ${{ github.token }}
+  bob-api-key:
+    description: 'IBM Bob API key (Inference scope) for `engine: bob`. Pass it from a repository secret.'
+    default: ''
+
+outputs:
+  exit-code:
+    description: '`kairos check` exit code: 0 clean, 1 drift at or above failOn, 2 could not run.'
+    value: ${{ steps.check.outputs.exit-code }}
+  report:
+    description: Path of the Markdown report.
+    value: ${{ steps.check.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24
+
+    - name: Build Kairos
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: |
+        npm install -g pnpm@12.6.0 --silent
+        pnpm install --frozen-lockfile --filter kairos --silent
+        pnpm --filter kairos build
+
+    - name: kairos check
+      id: check
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        KAIROS: ${{ github.action_path }}/packages/cli/dist/index.js
+        ENGINE: ${{ inputs.engine }}
+        BASE: ${{ inputs.base }}
+        BOB_API_KEY: ${{ inputs.bob-api-key }}
+      run: |
+        args=(check --engine "$ENGINE")
+        if [ -n "$BASE" ]; then
+          args+=(--base "$BASE")
+        elif [ -n "$GITHUB_BASE_REF" ]; then
+          git fetch --no-tags --quiet origin "$GITHUB_BASE_REF"
+          args+=(--base "origin/$GITHUB_BASE_REF")
+        fi
+        set +e
+        node "$KAIROS" "${args[@]}"
+        code=$?
+        set -e
+        echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+        echo "report=$PWD/kairos-report.md" >> "$GITHUB_OUTPUT"
+        if [ -f kairos-report.md ]; then cat kairos-report.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+    - name: PR comment
+      if: inputs.comment == 'true' && github.event.pull_request.number
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR: ${{ github.event.pull_request.number }}
+        REPORT: ${{ steps.check.outputs.report }}
+      run: |
+        [ -f "$REPORT" ] || { echo "No report to post."; exit 0; }
+        marker='<!-- kairos-report -->'
+        body="$RUNNER_TEMP/kairos-comment.md"
+        { echo "$marker"; cat "$REPORT"; } > "$body"
+        id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+          --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F "body=@$body" --silent
+          echo "Updated the Kairos comment."
+        else
+          gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -F "body=@$body" --silent
+          echo "Posted the Kairos comment."
+        fi
+
+    - name: Verdict
+      shell: bash
+      env:
+        CODE: ${{ steps.check.outputs.exit-code }}
+        FAIL_ON_DRIFT: ${{ inputs.fail-on-drift }}
+      run: |
+        if [ "$CODE" = 1 ] && [ "$FAIL_ON_DRIFT" = true ]; then
+          echo "::error::Kairos found intent drift. See the report in the job summary."
+          exit 1
+        fi
+        if [ "$CODE" != 0 ] && [ "$CODE" != 1 ]; then
+          echo "::error::kairos check could not run (exit $CODE)."
+          exit "$CODE"
+        fi

@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install -g pnpm@12.6.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm test
+
+  # Runs the Kairos Action on the demo scenario (drifts A/B/C) with the mock engine.
+  action-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Demo repo with drifts A, B and C
+        run: |
+          demo/scripts/reset.sh
+          demo/scripts/drift-a.sh
+          demo/scripts/drift-b.sh
+          demo/scripts/drift-c.sh
+      - id: kairos
+        uses: ./
+        with:
+          working-directory: demo/.work/orders-api
+          base: main
+          engine: mock
+          comment: 'false'
+          fail-on-drift: 'false'
+      - name: Expect drift
+        run: test "${{ steps.kairos.outputs.exit-code }}" = 1

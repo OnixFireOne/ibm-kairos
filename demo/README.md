@@ -32,3 +32,13 @@ node <kairos>/packages/cli/dist/index.js fix --id KRS-001 --truth intent --allow
 Ids are renumbered by each re-check, hence KRS-002 twice. Add `--engine mock --yes` to replay the whole
 chain offline: the patches `fixtures/fix-<ID>-<TYPE>.patch` and the re-check replies were recorded from the
 real Bob run (Bob tasks 06–13 in `bob_sessions/README.md`).
+
+Block pushes on drift with the pre-push hook (`--engine mock` replays the fixtures; drop it for live Bob):
+
+```bash
+node <kairos>/packages/cli/dist/index.js hook install --engine mock
+git push   # runs kairos check; drift at or above failOn blocks the push (skip once: --no-verify)
+```
+
+On GitHub, `orders-api/.github/workflows/kairos.yml` runs the Kairos Action on every pull request and posts the report
+as a PR comment.

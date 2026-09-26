@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { registerCheck } from './commands/check.js';
 import { registerFix } from './commands/fix.js';
 import { registerHandoff } from './commands/handoff.js';
+import { registerHook } from './commands/hook.js';
 import { registerInit } from './commands/init.js';
 import { registerProgress } from './commands/progress.js';
 import { registerSession } from './commands/session.js';
@@ -19,5 +20,6 @@ export function createProgram(): Command {
   registerProgress(program);
   registerSession(program);
   registerHandoff(program);
+  registerHook(program);
   return program;
 }
