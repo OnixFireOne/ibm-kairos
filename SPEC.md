@@ -225,6 +225,7 @@ map:
   "src/pricing/**": ["docs/SPEC.md#Pricing"]
   "src/routes/**":  ["openapi.yaml"]
 failOn: medium          # exit 1 if any finding >= this severity
+minConfidence: 0.6      # drop findings below this confidence
 budget:
   maxCost: 2            # bobcoins per run
   maxTurns: 8
