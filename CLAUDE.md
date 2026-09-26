@@ -14,4 +14,4 @@ Before doing anything read `HANDOFF.md` (current state, next step, gotchas), the
 - Keep scope to the MVP in SPEC §5. Ask before adding dependencies beyond SPEC §8.
 - TypeScript strict, small modules, vitest for every module; `pnpm test` must stay green.
 - Small, focused commits named after the task (e.g. `T2: diff collector`).
-- Save Claude Code limits: Claude Code writes the contract, fixtures and red tests, then hands the implementation to Codex (codex-bridge MCP `codex_run`, `sandbox: workspace-write`, cwd = repo), reviews the result, fixes small things and commits (Codex cannot write `.git`). IBM Bob implements only tasks planned for Bob (they need Bob evidence).
+- Save Claude Code limits: Claude Code writes the contract, fixtures and red tests, then hands the implementation to Codex CLI directly (`zsh -ic 'codex exec -s workspace-write "<prompt>"'` from the repo root), reviews the result, fixes small things and commits (Codex cannot write `.git`). IBM Bob implements only tasks planned for Bob (they need Bob evidence).
