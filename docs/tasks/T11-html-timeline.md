@@ -17,6 +17,7 @@ Show the "Kairos moments" over time: when drift appeared and when it was resolve
 ## Problems
 - `--out /abs/path` was joined onto cwd (`join`); fixed with `resolve`, covered by a test.
 - The built-in browser can't screenshot `file://` pages; served `/tmp` over `python3 -m http.server` to check the layout.
+- Findings tables overflowed the run cards on narrow screens (nowrap columns). Tables now sit in an `overflow-x:auto` wrapper and scroll sideways inside the card; checked at 375px: page width = viewport, no card overflow.
 
 ## Result
 - 11 tests in `test/timeline.test.ts` (timeline diffing, repeats, empty history, HTML self-containment + escaping, text output, `--html`, absolute `--out`, no history). 161 tests green, lint clean.

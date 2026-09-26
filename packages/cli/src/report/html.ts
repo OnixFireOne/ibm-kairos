@@ -94,9 +94,9 @@ function runCard(r: TimelineRun, i: number, failOn: Severity): string {
   ];
   if (findings.length > 0) {
     out.push(
-      '<table><thead><tr><th>Severity</th><th>ID</th><th>Type</th><th>Title</th><th>Code</th></tr></thead><tbody>',
+      '<div class="scroll"><table><thead><tr><th>Severity</th><th>ID</th><th>Type</th><th>Title</th><th>Code</th></tr></thead><tbody>',
       ...findings.map((f) => findingRow(f, i > 0 && opened.has(f))),
-      '</tbody></table>',
+      '</tbody></table></div>',
     );
   }
   if (r.resolved.length > 0) {
@@ -136,7 +136,10 @@ header p{margin:2px 0 0;color:#8ea0c8}
 .run h2{margin:0;font-size:18px}
 .meta{color:#8ea0c8;font-size:13px;margin:4px 0}
 .ok{color:${RESOLVED}}.warn{color:${COLOR.low}}.fail{color:${COLOR.high}}
-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.scroll{overflow-x:auto;margin-top:8px}
+.run{min-width:0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td:nth-child(4){min-width:220px}
 th,td{text-align:left;padding:6px 8px;border-top:1px solid #1d2a55;vertical-align:top}
 th{color:#8ea0c8;font-weight:500}
 td:nth-child(-n+3){white-space:nowrap}
