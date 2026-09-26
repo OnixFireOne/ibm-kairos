@@ -1,0 +1,32 @@
+I now have all the evidence needed. The single real divergence is the discount rate: [`DISCOUNT_RATE`](src/pricing.ts:8) was changed from 0.10 to 0.15 in code, tests, and the `docs/SPEC.md` pricing prose was **not** updated — it still says "10% discount" at line 10.
+
+```json
+{
+  "findings": [
+    {
+      "id": "KRS-001",
+      "type": "SPEC_VIOLATION",
+      "severity": "high",
+      "title": "DISCOUNT_RATE changed to 15% but SPEC still mandates 10%",
+      "code": {
+        "file": "src/pricing.ts",
+        "lines": [8, 8],
+        "excerpt": "export const DISCOUNT_RATE = 0.15;"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [10, 14],
+        "excerpt": "- Orders with a subtotal **above $100** get a **10% discount** on the whole order.\n  Orders of exactly $100 or less pay the full subtotal.\n- Totals are rounded to cents (half up).\n- The discount rate and threshold are business decisions owned by Finance; changing them\n  requires a spec update first."
+      },
+      "explanation": "docs/SPEC.md line 10 still states a 10% discount. The spec's own governance rule (lines 13-14) explicitly requires a spec update before the rate can be changed. The rate was raised to 15% in code and tests without updating the prose in docs/SPEC.md, making the spec and code contradict each other.",
+      "truth": "ask",
+      "proposal": {
+        "action": "update_spec",
+        "summary": "If Finance has approved the 15% rate, update docs/SPEC.md line 10 to read '15% discount' so the spec and code agree. If the change was not approved, revert DISCOUNT_RATE to 0.10 and restore the test expectations to 108."
+      },
+      "confidence": 1.0
+    }
+  ],
+  "summary": "One high-severity finding: the discount rate was raised from 10% to 15% in code and tests, but docs/SPEC.md still documents 10%. The spec's own governance rule requires a spec update before changing this value, so either the spec must be updated to 15% (if Finance approved the change) or the code must be reverted to 10%."
+}
+```

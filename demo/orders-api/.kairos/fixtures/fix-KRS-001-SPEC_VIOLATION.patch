@@ -1,0 +1,40 @@
+diff --git a/src/pricing.ts b/src/pricing.ts
+index 25d74cd..3f824d6 100644
+--- a/src/pricing.ts
++++ b/src/pricing.ts
+@@ -5,7 +5,7 @@ export interface LineItem {
+ }
+ 
+ export const DISCOUNT_THRESHOLD = 100;
+-export const DISCOUNT_RATE = 0.15;
++export const DISCOUNT_RATE = 0.10;
+ 
+ const round = (n: number): number => Math.round(n * 100) / 100;
+ 
+diff --git a/test/orders.test.ts b/test/orders.test.ts
+index 964bfc7..48d90f5 100644
+--- a/test/orders.test.ts
++++ b/test/orders.test.ts
+@@ -25,7 +25,7 @@ describe('orders API', () => {
+     const created = await post({ items: [{ sku: 'SKU-1', unitPrice: 60, quantity: 2 }] });
+     expect(created.status).toBe(201);
+     const order = await created.json();
+-    expect(order.total).toBe(102);
++    expect(order.total).toBe(108);
+ 
+     const read = await fetch(`${url}/orders/${order.id}`);
+     expect(read.status).toBe(200);
+diff --git a/test/pricing.test.ts b/test/pricing.test.ts
+index bff7458..b33fd19 100644
+--- a/test/pricing.test.ts
++++ b/test/pricing.test.ts
+@@ -9,7 +9,7 @@ describe('orderTotal', () => {
+     expect(orderTotal([item(100)])).toBe(100);
+   });
+ 
+-  it('gives 15% off above $100', () => {
+-    expect(orderTotal([item(60, 2)])).toBe(102);
++  it('gives 10% off above $100', () => {
++    expect(orderTotal([item(60, 2)])).toBe(108);
+   });
+ });

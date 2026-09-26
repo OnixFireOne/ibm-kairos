@@ -1,0 +1,15 @@
+The router is mounted at root, routes use full paths (`/orders`, `/orders/:id`). This is consistent. Now let me check one important detail: the `DELETE` 404 response in `openapi.yaml` has no `content` schema defined, but the code sends a JSON body. The same applies to the pre-existing GET 404. Let me verify if there's a test gap — the spec says "every endpoint… covered by a test in `test/`". Both DELETE test cases exist.
+
+Let me now check whether the `DISCOUNT_RATE` change is truly a no-op numerically or if there's any edge case in TypeScript/JS — `0.1 === 0.10` is `true` in JS, so this is confirmed as purely cosmetic.
+
+**Summary of genuine findings:**
+
+1. **UNDOCUMENTED_BEHAVIOR**: `DELETE /orders/:id` returns a JSON body `{"error":"order not found"}` on 404, but `openapi.yaml` declares no `content` for the 404 response on the delete operation. The spec only says "404 if it does not exist" without specifying a body. The contract is silent on the body, so the code emits undocumented response content.
+
+2. **MISSING_TEST**: There is no test covering the discount pricing boundary (above $100 gets 10% discount). Wait — actually `test/orders.test.ts` line 25-28 tests `unitPrice: 60, quantity: 2` = subtotal 120, which is above 100, giving `108` (120 * 0.9). That covers the discount path. But there's no test for the exact-$100 boundary (no discount) or pricing unit tests. However, the existing test pre-dates this diff; the pricing logic itself wasn't changed. Not a new gap introduced by this diff.
+
+The one real finding is the undocumented JSON body on DELETE 404.
+
+```json
+{"findings":[{"id":"KRS-001","type":"UNDOCUMENTED_BEHAVIOR","severity":"low","title":"DELETE /orders/:id returns a JSON error body on 404 not declared in openapi.yaml","code":{"file":"src/routes/orders.ts","lines":[38,40],"excerpt":"    if (!store.delete(req.params.id)) {\n      res.status(404).json({ error: 'order not found' });\n      return;\n    }"},"intent":{"file":"openapi.yaml","lines":[58,61],"excerpt":"        '404':\n          description: Order not found"},"explanation":"The implementation sends a JSON body { \"error\": \"order not found\" } with the 404, but the OpenAPI contract for DELETE /orders/{id} declares no response content schema for 404 — only a description. Consumers relying on the contract alone have no knowledge of this body.","truth":"ask","proposal":{"action":"update_spec","summary":"Add a content/application/json schema to the '404' response of the DELETE operation in openapi.yaml, mirroring the pattern used by the existing GET 404 (or add an inline error object schema), so the contract matches the actual response body."},"confidence":0.88}],"summary":"One finding: the DELETE route emits a JSON error body on 404 that is not reflected in the OpenAPI contract. All other changes (env rename, DISCOUNT_RATE 0.1→0.10, new DELETE endpoint, tests) are consistent across README, SPEC, openapi.yaml, code, and tests."}
+```

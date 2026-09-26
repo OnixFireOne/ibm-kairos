@@ -24,7 +24,11 @@ Mock replies for the demo live in `orders-api/.kairos/fixtures/` (recorded from 
 Then fix a finding (Bob edits docs/tests, you confirm the diff, Kairos commits and re-checks):
 
 ```bash
-node <kairos>/packages/cli/dist/index.js fix --id KRS-002                  # C: README + SPEC to DATABASE_URL
-node <kairos>/packages/cli/dist/index.js fix --id KRS-003 --truth code     # B: document DELETE in SPEC + openapi
-node <kairos>/packages/cli/dist/index.js fix --id KRS-002 --engine mock --yes   # offline: applies fixtures/fix-KRS-002.patch
+node <kairos>/packages/cli/dist/index.js fix --id KRS-002                             # C: README + SPEC to DATABASE_URL
+node <kairos>/packages/cli/dist/index.js fix --id KRS-002 --truth code                # B (renumbered after the re-check): document DELETE + tests
+node <kairos>/packages/cli/dist/index.js fix --id KRS-001 --truth intent --allow-code # A: back to 10% in code and tests
 ```
+
+Ids are renumbered by each re-check, hence KRS-002 twice. Add `--engine mock --yes` to replay the whole
+chain offline: the patches `fixtures/fix-<ID>-<TYPE>.patch` and the re-check replies were recorded from the
+real Bob run (Bob tasks 06–13 in `bob_sessions/README.md`).

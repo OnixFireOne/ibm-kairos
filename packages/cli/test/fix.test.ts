@@ -307,6 +307,31 @@ describe('runFix', () => {
     );
   });
 
+  it('uses the session caps and reverts partial edits when Bob stops at a cap', async () => {
+    const cwd = await repo([finding()]);
+    const exec = vi.fn<Exec>(async () => {
+      await writeFile(join(cwd, 'docs/SPEC.md'), SPEC_NEW);
+      await writeFile(join(cwd, 'docs/new.md'), 'half\n');
+      const error = JSON.stringify({
+        type: 'error',
+        message: 'The task reached the maximum of 40 turns.',
+      });
+      return { stdout: `${error}\n${resultLine('partial')}`, stderr: '', exitCode: 0 };
+    });
+    await expect(
+      runFix(cwd, {
+        id: 'KRS-001',
+        yes: true,
+        bob: { exec, env: { BOB_API_KEY: 'test' } },
+        now: NOW,
+      }),
+    ).rejects.toThrow(/maximum of 40 turns.*docs\/SPEC\.md, docs\/new\.md\) were reverted/);
+    const args = exec.mock.calls[0]![1];
+    expect(args[args.indexOf('--max-turns') + 1]).toBe('40');
+    expect(args[args.indexOf('--max-cost') + 1]).toBe('3');
+    expect(await git(cwd, 'status', '--porcelain', '--untracked-files=all', 'docs')).toBe('');
+  });
+
   describe('refuses before spending Bobcoins', () => {
     const cases: Array<[string, Finding, Parameters<typeof runFix>[1], RegExp]> = [
       ['unknown id', finding(), { id: 'KRS-404', yes: true }, /No finding KRS-404.*KRS-001/],
@@ -362,6 +387,22 @@ describe('runFix', () => {
       expect(res.status).toBe('resolved');
       expect(res.costBobcoins).toBe(0);
       expect(await readFile(join(cwd, 'docs/SPEC.md'), 'utf8')).toBe(SPEC_NEW);
+    });
+
+    it('prefers fix-<ID>-<TYPE>.patch (ids renumber between runs)', async () => {
+      const cwd = await repo([finding()], 'engine: mock\nbase: base\n');
+      await writeFile(join(cwd, 'docs/SPEC.md'), SPEC_NEW);
+      const patch = await git(cwd, 'diff');
+      await git(cwd, 'checkout', '--', 'docs/SPEC.md');
+      await mkdir(join(cwd, FIXTURES_DIR), { recursive: true });
+      await writeFile(join(cwd, FIXTURES_DIR, 'fix-KRS-001-STALE_DOC.patch'), `${patch}\n`);
+      await writeFile(join(cwd, FIXTURES_DIR, 'fix-KRS-001.patch'), 'not a patch\n');
+      await git(cwd, 'add', '.');
+      await git(cwd, 'commit', '-qm', 'fixtures');
+
+      const res = await runFix(cwd, { id: 'KRS-001', yes: true, check: false, now: NOW });
+      expect(res.summary).toBe('MockEngine: applied fix-KRS-001-STALE_DOC.patch.');
+      expect(res.status).toBe('committed');
     });
 
     it('changes nothing without a patch fixture', async () => {

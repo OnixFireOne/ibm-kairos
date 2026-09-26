@@ -1,0 +1,81 @@
+{"ts":"2026-09-26T16:26:37.078Z","level":"info","module":"workspace","msg":"detectPath resolved: /Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api (cwd=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api, explicit=none)"}
+{"ts":"2026-09-26T16:26:37.085Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Starting initialization"}
+{"ts":"2026-09-26T16:26:37.086Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Production build detected, using wasmsDir: /Users/andy/.nvm/versions/node/v24.21.0/lib/node_modules/bobshell/dist"}
+{"ts":"2026-09-26T16:26:37.086Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Initialization complete"}
+{"ts":"2026-09-26T16:26:37.088Z","level":"debug","module":"MCP","msg":"McpHub initialized","data":{"globalScopeRoot":"/Users/andy/.bob/settings","globalConfigPath":"/Users/andy/.bob/settings/mcp.json"}}
+{"ts":"2026-09-26T16:26:37.089Z","level":"info","module":"PolicyService","msg":"Initialising policy watcher on platform \"darwin\""}
+{"ts":"2026-09-26T16:26:37.091Z","level":"info","module":"PolicyService","msg":"Starting native policy watcher for product \"com.ibm.bob\""}
+{"ts":"2026-09-26T16:26:37.102Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"GET","url":"https://api.us-east.bob.ibm.com/admin/v1/profile","bodySize":0}}
+{"ts":"2026-09-26T16:26:37.427Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/profile"}}
+{"ts":"2026-09-26T16:26:37.427Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"GET","url":"https://api.us-east.bob.ibm.com/admin/v1/profile","status":200,"elapsedMs":325}}
+{"ts":"2026-09-26T16:26:37.435Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"GET","url":"https://api.us-east.bob.ibm.com/inference/v1/model/info","bodySize":0}}
+{"ts":"2026-09-26T16:26:37.442Z","level":"info","module":"BobHarness","msg":"Telemetry client registered: bob-bob -> https://api.us-east.bob.ibm.com"}
+{"ts":"2026-09-26T16:26:37.442Z","level":"info","module":"BobHarness","msg":"Telemetry initialized (bob-bob)"}
+{"ts":"2026-09-26T16:26:37.442Z","level":"debug","module":"MCP:ConfigManager","msg":"Setting up config file listeners"}
+{"ts":"2026-09-26T16:26:37.457Z","level":"info","module":"MCP:ConfigManager","msg":"Config file listeners initialized"}
+{"ts":"2026-09-26T16:26:37.458Z","level":"debug","module":"MCP","msg":"Updating global config from file","data":{"configPath":"/Users/andy/.bob/settings/mcp.json"}}
+{"ts":"2026-09-26T16:26:37.459Z","level":"debug","module":"MCP","msg":"Global config deleted, cleared global servers"}
+{"ts":"2026-09-26T16:26:37.460Z","level":"info","module":"MCP","msg":"[orders-api] Initializing MCP for workspace","data":{"workspaceRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","blockUntilReady":true}}
+{"ts":"2026-09-26T16:26:37.460Z","level":"debug","module":"MCP","msg":"Creating new workspace registry","data":{"workspaceRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api"}}
+{"ts":"2026-09-26T16:26:37.460Z","level":"debug","module":"MCP","msg":"Recalculated precedence","data":{"scopeRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","totalServers":0,"activeServers":0}}
+{"ts":"2026-09-26T16:26:37.462Z","level":"debug","module":"MCP","msg":"Removed all global servers from deleted config","data":{"workspaceRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","configPath":"/Users/andy/.bob/settings/mcp.json","removedCount":0}}
+{"ts":"2026-09-26T16:26:37.462Z","level":"debug","module":"MCP","msg":"Recalculated precedence","data":{"scopeRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","totalServers":0,"activeServers":0}}
+{"ts":"2026-09-26T16:26:37.465Z","level":"debug","module":"MCP","msg":"Removed all workspace servers from deleted config","data":{"workspaceRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","configPath":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.bob/mcp.json","removedCount":0}}
+{"ts":"2026-09-26T16:26:37.465Z","level":"debug","module":"MCP","msg":"Recalculated precedence","data":{"scopeRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","totalServers":0,"activeServers":0}}
+{"ts":"2026-09-26T16:26:37.465Z","level":"debug","module":"MCP","msg":"[orders-api] No active servers for workspace","data":{"workspaceRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api"}}
+{"ts":"2026-09-26T16:26:37.508Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.bob/skills watchGlob=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.bob/skills/*"}
+{"ts":"2026-09-26T16:26:37.509Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.bob/plugins/*/skills watchGlob=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.bob/plugins/*/skills/*"}
+{"ts":"2026-09-26T16:26:37.509Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.agents/skills watchGlob=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.agents/skills/*"}
+{"ts":"2026-09-26T16:26:37.509Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.claude/skills watchGlob=/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.claude/skills/*"}
+{"ts":"2026-09-26T16:26:37.510Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/.bob/skills watchGlob=/Users/andy/.bob/skills/*"}
+{"ts":"2026-09-26T16:26:37.510Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/.bob/plugins/*/skills watchGlob=/Users/andy/.bob/plugins/*/skills/*"}
+{"ts":"2026-09-26T16:26:37.510Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/.agents/skills watchGlob=/Users/andy/.agents/skills/*"}
+{"ts":"2026-09-26T16:26:37.510Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/.agents/plugins/*/skills watchGlob=/Users/andy/.agents/plugins/*/skills/*"}
+{"ts":"2026-09-26T16:26:37.511Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/.claude/skills watchGlob=/Users/andy/.claude/skills/*"}
+{"ts":"2026-09-26T16:26:37.511Z","level":"debug","module":"SkillDirectoryWatcher","msg":"Registering dir watcher: root=/Users/andy/.claude/plugins/*/skills watchGlob=/Users/andy/.claude/plugins/*/skills/*"}
+{"ts":"2026-09-26T16:26:37.553Z","level":"info","module":"TaskStore","msg":"Task store opened","data":"/Users/andy/.bob/db/bob.db"}
+{"ts":"2026-09-26T16:26:37.569Z","level":"debug","module":"bob-shell","msg":"Run context initialized","data":{"taskId":"3334f3ca0c958795a29f1bbcef9b2a04","model":"","directory":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","mode":{"id":"kairos-fix","name":"Kairos - Drift Fixer","description":"Applies the proposed resolution for one Kairos finding","roleDefinition":"You resolve one drift finding with the smallest correct change.","customInstructions":"- Change only what is needed to resolve the given finding.\n- Keep the style of the surrounding docs/tests. Run the tests if asked.","groups":["read","edit","execute"],"restrictions":[{"id":"edit","fileRegex":"\\.(md|ya?ml|json|test\\.ts)$"}],"configPath":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api/.bob/custom_modes.yaml","workspaceRoot":"/Users/andy/Documents/Ai/apps/hakaton/Ibm25-09/ibm-kairos/demo/.work/orders-api","workspaceName":"orders-api","scope":"workspace"}}}
+{"ts":"2026-09-26T16:26:37.586Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":7327}}
+{"ts":"2026-09-26T16:26:37.597Z","level":"debug","module":"RuleLoader","msg":"Rules: agents=false gCommon=0 wsCommon=0 gModes=0 wsModes=0"}
+{"ts":"2026-09-26T16:26:37.688Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/model/info"}}
+{"ts":"2026-09-26T16:26:37.688Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"GET","url":"https://api.us-east.bob.ibm.com/inference/v1/model/info","status":200,"elapsedMs":253}}
+{"ts":"2026-09-26T16:26:37.700Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":14042}}
+{"ts":"2026-09-26T16:26:37.943Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:37.943Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":243}}
+{"ts":"2026-09-26T16:26:37.957Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":32427}}
+{"ts":"2026-09-26T16:26:38.533Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:38.533Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":947}}
+{"ts":"2026-09-26T16:26:38.989Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:38.990Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":1033}}
+{"ts":"2026-09-26T16:26:40.007Z","level":"debug","module":"json-renderer","msg":"{\"type\":\"cost\",\"costs\":{\"input\":8967,\"output\":181,\"cacheRead\":8099,\"cacheWrite\":865,\"reasoningTokens\":0,\"cost\":0.018296,\"contextTokens\":9148}}"}
+{"ts":"2026-09-26T16:26:40.035Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":36825}}
+{"ts":"2026-09-26T16:26:41.151Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:41.151Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":1116}}
+{"ts":"2026-09-26T16:26:41.626Z","level":"debug","module":"json-renderer","msg":"{\"type\":\"cost\",\"costs\":{\"input\":19307,\"output\":249,\"cacheRead\":17063,\"cacheWrite\":2240,\"reasoningTokens\":0,\"cost\":0.039112,\"contextTokens\":10408}}"}
+{"ts":"2026-09-26T16:26:41.689Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":37178}}
+{"ts":"2026-09-26T16:26:42.881Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:42.881Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":1192}}
+{"ts":"2026-09-26T16:26:43.231Z","level":"debug","module":"json-renderer","msg":"{\"type\":\"cost\",\"costs\":{\"input\":29742,\"output\":344,\"cacheRead\":27402,\"cacheWrite\":2335,\"reasoningTokens\":0,\"cost\":0.060172,\"contextTokens\":10530}}"}
+{"ts":"2026-09-26T16:26:43.244Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":39127}}
+{"ts":"2026-09-26T16:26:44.281Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:44.281Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":1037}}
+{"ts":"2026-09-26T16:26:51.587Z","level":"debug","module":"json-renderer","msg":"{\"type\":\"cost\",\"costs\":{\"input\":40878,\"output\":1392,\"cacheRead\":37836,\"cacheWrite\":3036,\"reasoningTokens\":0,\"cost\":0.08454,\"contextTokens\":12184}}"}
+{"ts":"2026-09-26T16:26:51.631Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":45966}}
+{"ts":"2026-09-26T16:26:52.722Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:26:52.722Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":1091}}
+{"ts":"2026-09-26T16:26:53.370Z","level":"debug","module":"json-renderer","msg":"{\"type\":\"cost\",\"costs\":{\"input\":54029,\"output\":1471,\"cacheRead\":48971,\"cacheWrite\":5051,\"reasoningTokens\":0,\"cost\":0.111,\"contextTokens\":13230}}"}
+{"ts":"2026-09-26T16:26:53.373Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Initializing parser for first use"}
+{"ts":"2026-09-26T16:26:53.387Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Parser initialized successfully"}
+{"ts":"2026-09-26T16:26:53.387Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Loading language parser: bash"}
+{"ts":"2026-09-26T16:26:53.387Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Loading WASM from: /Users/andy/.nvm/versions/node/v24.21.0/lib/node_modules/bobshell/dist/tree-sitter-bash.wasm"}
+{"ts":"2026-09-26T16:26:53.390Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Read WASM file, size: 1400214 bytes"}
+{"ts":"2026-09-26T16:26:53.421Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Successfully loaded WASM for bash"}
+{"ts":"2026-09-26T16:26:53.438Z","level":"debug","module":"bob-shell","msg":"[TreeSitter] Successfully loaded parser for bash"}
+{"ts":"2026-09-26T16:26:59.557Z","level":"debug","module":"Gateway","msg":"HTTP request","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","bodySize":46674}}
+{"ts":"2026-09-26T16:27:01.367Z","level":"debug","module":"Gateway","msg":"Response received","data":{"status":200,"path":"/chat/completions"}}
+{"ts":"2026-09-26T16:27:01.367Z","level":"debug","module":"Gateway","msg":"HTTP request complete","data":{"method":"POST","url":"https://api.us-east.bob.ibm.com/inference/v1/chat/completions","status":200,"elapsedMs":1810}}
+{"ts":"2026-09-26T16:27:02.874Z","level":"debug","module":"json-renderer","msg":"{\"type\":\"cost\",\"costs\":{\"input\":67449,\"output\":1601,\"cacheRead\":62121,\"cacheWrite\":5320,\"reasoningTokens\":0,\"cost\":0.1381,\"contextTokens\":13550}}"}
+{"ts":"2026-09-26T16:27:03.282Z","level":"debug","module":"MCP","msg":"Disposing McpHub"}
+{"ts":"2026-09-26T16:27:03.282Z","level":"debug","module":"MCP","msg":"Closing all clients","data":{"workspaceCount":1}}
+{"ts":"2026-09-26T16:27:03.283Z","level":"info","module":"MCP","msg":"All clients closed"}
+{"ts":"2026-09-26T16:27:03.283Z","level":"info","module":"MCP","msg":"McpHub disposed"}

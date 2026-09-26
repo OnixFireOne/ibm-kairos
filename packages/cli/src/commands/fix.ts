@@ -131,19 +131,26 @@ async function applyFix(
   o: FixOptions,
 ): Promise<Applied> {
   if ((o.engine ?? config.engine) === 'mock') {
-    const patch = join(cwd, FIXTURES_DIR, `fix-${f.id}.patch`);
-    try {
-      await readFile(patch);
-    } catch {
-      return { summary: `MockEngine: no fixture fix-${f.id}.patch, nothing changed.` };
+    // Ids renumber per run, so `fix-<ID>-<TYPE>.patch` tells apart KRS-002 of different runs.
+    for (const name of [`fix-${f.id}-${f.type}.patch`, `fix-${f.id}.patch`]) {
+      const patch = join(cwd, FIXTURES_DIR, name);
+      if (
+        !(await readFile(patch).then(
+          () => true,
+          () => false,
+        ))
+      )
+        continue;
+      await git(cwd, 'apply', patch);
+      return { summary: `MockEngine: applied ${name}.`, costBobcoins: 0 };
     }
-    await git(cwd, 'apply', patch);
-    return { summary: `MockEngine: applied fix-${f.id}.patch.`, costBobcoins: 0 };
+    return { summary: `MockEngine: no fixture fix-${f.id}-${f.type}.patch, nothing changed.` };
   }
   const bob = new BobEngine({
     cwd,
-    maxCost: config.budget.maxCost,
-    maxTurns: config.budget.maxTurns,
+    // An edit run (read, edit, run tests) needs more turns than a read-only check.
+    maxCost: config.session.maxCostPerRun,
+    maxTurns: config.session.maxTurnsPerRun,
     mode: o.allowCode ? FIX_CODE_MODE : FIX_MODE,
     ...o.bob,
   });
@@ -208,16 +215,24 @@ export async function runFix(cwd: string, o: FixOptions): Promise<FixResult> {
 
   const before = new Set(await untracked(cwd));
   log(`Fixing ${finding.id} (${finding.type}): ${finding.title}\nSource of truth: ${truth}`);
-  const applied = await applyFix(
-    cwd,
-    config,
-    finding,
-    buildFixPrompt(finding, truth, allowCode),
-    o,
-  );
+  const changes = async () => ({
+    tracked: lines(await git(cwd, 'diff', '--name-only')).filter((p) => !isRuntime(p)),
+    added: (await untracked(cwd)).filter((p) => !before.has(p) && !isRuntime(p)),
+  });
+  let applied: Applied;
+  try {
+    applied = await applyFix(cwd, config, finding, buildFixPrompt(finding, truth, allowCode), o);
+  } catch (err) {
+    // Bob stopped midway (turn or cost cap, crash): never leave half a fix in the tree.
+    const partial = await changes();
+    if (err instanceof EngineError && partial.tracked.length + partial.added.length > 0) {
+      await revert(cwd, partial.tracked, partial.added);
+      err.message += ` Bob's partial changes (${[...partial.tracked, ...partial.added].join(', ')}) were reverted.`;
+    }
+    throw err;
+  }
 
-  const tracked = lines(await git(cwd, 'diff', '--name-only')).filter((p) => !isRuntime(p));
-  const added = (await untracked(cwd)).filter((p) => !before.has(p) && !isRuntime(p));
+  const { tracked, added } = await changes();
   const changedFiles = [...tracked, ...added].sort();
   const base: Omit<FixResult, 'status' | 'diff'> = {
     finding,

@@ -1,0 +1,78 @@
+All necessary evidence is gathered. Here is the audit result:
+
+```json
+{
+  "findings": [
+    {
+      "id": "KRS-001",
+      "type": "SPEC_VIOLATION",
+      "severity": "high",
+      "title": "DISCOUNT_RATE changed to 15% without a spec update",
+      "code": {
+        "file": "src/pricing.ts",
+        "lines": [8, 8],
+        "excerpt": "export const DISCOUNT_RATE = 0.15;"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [10, 14],
+        "excerpt": "Orders with a subtotal **above $100** get a **10% discount** on the whole order.\n- The discount rate and threshold are business decisions owned by Finance; changing them\n  requires a spec update first."
+      },
+      "explanation": "The spec still mandates a 10% discount (line 10) and explicitly states the rate is a Finance-owned business decision that requires a spec update before the code changes. The code was changed to 15% but docs/SPEC.md line 10 was not updated to reflect the new rate. The spec change is a prerequisite, not an afterthought.",
+      "truth": "ask",
+      "proposal": {
+        "action": "update_spec",
+        "summary": "Update docs/SPEC.md line 10 to read '15% discount' — but only after Finance has approved the change. If approval has not been obtained, revert src/pricing.ts DISCOUNT_RATE back to 0.1."
+      },
+      "confidence": 0.98
+    },
+    {
+      "id": "KRS-002",
+      "type": "UNDOCUMENTED_BEHAVIOR",
+      "severity": "high",
+      "title": "DELETE /orders/:id has no entry in openapi.yaml or docs/SPEC.md",
+      "code": {
+        "file": "src/routes/orders.ts",
+        "lines": [37, 43],
+        "excerpt": "router.delete('/orders/:id', (req, res) => {\n    if (!store.delete(req.params.id)) {\n      res.status(404).json({ error: 'order not found' });\n      return;\n    }\n    res.status(204).end();\n  });"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [16, 21],
+        "excerpt": "## Orders\n\n- `POST /orders` creates an order …\n- `GET /orders/:id` returns one order, or 404 if it does not exist.\n- Every endpoint is described in `openapi.yaml` and covered by a test in `test/`."
+      },
+      "explanation": "The spec's Orders section lists only POST and GET endpoints. The DELETE endpoint is not listed in docs/SPEC.md and has no path entry in openapi.yaml. The spec rule 'Every endpoint is described in openapi.yaml' is violated.",
+      "truth": "ask",
+      "proposal": {
+        "action": "update_spec",
+        "summary": "Add DELETE /orders/:id to docs/SPEC.md (Orders section) and add a corresponding delete operation under /orders/{id} in openapi.yaml (204 on success, 404 if not found). If the endpoint is not yet approved, revert src/routes/orders.ts and src/store.ts."
+      },
+      "confidence": 0.99
+    },
+    {
+      "id": "KRS-003",
+      "type": "MISSING_TEST",
+      "severity": "medium",
+      "title": "DELETE /orders/:id has no integration test",
+      "code": {
+        "file": "test/orders.test.ts",
+        "lines": [23, 42],
+        "excerpt": "describe('orders API', () => {\n  it('creates an order and reads it back', …);\n  it('rejects an empty order', …);\n  it('returns 404 for an unknown order', …);\n});"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [21, 21],
+        "excerpt": "- Every endpoint is described in `openapi.yaml` and covered by a test in `test/`."
+      },
+      "explanation": "The spec mandates every endpoint is covered by a test. The new DELETE route has no test case: neither the 204 success path nor the 404-not-found path is exercised anywhere in test/orders.test.ts.",
+      "truth": "intent",
+      "proposal": {
+        "action": "add_test",
+        "summary": "Add at least two test cases to test/orders.test.ts: one that creates an order and deletes it (expecting 204), and one that deletes a non-existent id (expecting 404)."
+      },
+      "confidence": 0.99
+    }
+  ],
+  "summary": "Three real divergences found: (1) DISCOUNT_RATE was raised from 10% to 15% in code and tests but docs/SPEC.md still says 10% and requires a Finance-approved spec update before the code change; (2) the new DELETE /orders/:id endpoint is absent from both docs/SPEC.md and openapi.yaml, violating the rule that every endpoint must be documented in the contract; (3) the DELETE route has no integration test, also violating the same spec rule."
+}
+```
