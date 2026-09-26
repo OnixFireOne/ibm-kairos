@@ -1,0 +1,5 @@
+The diff is a single-character typo fix: `retreive` → `retrieve` on line 3 of [`docs/SPEC.md`](docs/SPEC.md:3). This is a pure documentation spelling correction with no semantic change to any business rule, contract, endpoint, or configuration. There is nothing to diverge against.
+
+```json
+{"findings":[],"summary":"The change is a one-word spelling correction ('retreive' → 'retrieve') in the SPEC.md introduction. No business rule, API contract, ADR, or test coverage is affected; there is no drift to report."}
+```

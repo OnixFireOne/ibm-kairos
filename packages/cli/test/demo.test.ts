@@ -68,3 +68,20 @@ describe('demo/orders-api scenario', () => {
     expect(res.exitCode).toBe(0);
   });
 });
+
+describe('demo fixtures', () => {
+  it('replay the recorded Bob replies for A/B/C and control after a fresh reset', async () => {
+    const abc = await runCheck(await demo('drift-a', 'drift-b', 'drift-c'), { engine: 'mock' });
+    expect(abc.report.findings.map((f) => f.type).sort()).toEqual([
+      'MISSING_TEST',
+      'SPEC_VIOLATION',
+      'STALE_DOC',
+      'UNDOCUMENTED_BEHAVIOR',
+    ]);
+    expect(abc.exitCode).toBe(1);
+
+    const control = await runCheck(await demo('control'), { engine: 'mock' });
+    expect(control.report.findings).toEqual([]);
+    expect(control.report.summary).not.toMatch(/no fixture/);
+  });
+});

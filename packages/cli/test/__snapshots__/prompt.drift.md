@@ -13,7 +13,7 @@ Rules:
 
 ## Change under review
 
-Base: `origin/main` · Head: `abc1234def56`
+Base: `origin/main`
 
 Changed files:
 - logo.png (modified, binary)

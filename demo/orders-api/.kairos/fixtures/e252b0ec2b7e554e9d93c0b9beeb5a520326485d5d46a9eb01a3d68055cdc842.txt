@@ -1,0 +1,101 @@
+All files are confirmed. Now I have complete evidence for all findings.
+
+```json
+{
+  "findings": [
+    {
+      "id": "KRS-001",
+      "type": "SPEC_VIOLATION",
+      "severity": "high",
+      "title": "DISCOUNT_RATE changed to 15% without a spec update",
+      "code": {
+        "file": "src/pricing.ts",
+        "lines": [8, 8],
+        "excerpt": "export const DISCOUNT_RATE = 0.15;"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [10, 14],
+        "excerpt": "Orders with a subtotal **above $100** get a **10% discount** on the whole order. … The discount rate and threshold are business decisions owned by Finance; changing them requires a spec update first."
+      },
+      "explanation": "The spec explicitly states the discount is 10% and mandates that Finance must approve and a spec update must precede any change to the discount rate. The code now uses 0.15 (15%) but docs/SPEC.md still documents 10%. The spec was not updated, violating its own governance rule.",
+      "truth": "intent",
+      "proposal": {
+        "action": "update_code",
+        "summary": "Revert DISCOUNT_RATE to 0.1 in src/pricing.ts (and matching test assertions) until Finance approves and docs/SPEC.md is updated to reflect the new rate."
+      },
+      "confidence": 1.0
+    },
+    {
+      "id": "KRS-002",
+      "type": "STALE_DOC",
+      "severity": "high",
+      "title": "README and SPEC still document DB_URL after rename to DATABASE_URL",
+      "code": {
+        "file": "src/config.ts",
+        "lines": [8, 9],
+        "excerpt": "const dbUrl = process.env.DATABASE_URL;\n  if (!dbUrl) throw new Error('DATABASE_URL is required');"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [26, 26],
+        "excerpt": "- `DB_URL` (required): connection string of the orders database."
+      },
+      "explanation": "The environment variable was renamed from DB_URL to DATABASE_URL in code, but docs/SPEC.md line 26 still documents DB_URL. README.md lines 10 and 18 also still reference DB_URL in both the run example and the environment-variables table. Any operator following the docs will set DB_URL and the service will refuse to start.",
+      "truth": "code",
+      "proposal": {
+        "action": "update_doc",
+        "summary": "Replace every occurrence of DB_URL with DATABASE_URL in docs/SPEC.md (line 26) and README.md (lines 10 and 18) to match the renamed environment variable."
+      },
+      "confidence": 1.0
+    },
+    {
+      "id": "KRS-003",
+      "type": "UNDOCUMENTED_BEHAVIOR",
+      "severity": "medium",
+      "title": "DELETE /orders/:id endpoint has no entry in openapi.yaml or docs/SPEC.md",
+      "code": {
+        "file": "src/routes/orders.ts",
+        "lines": [37, 43],
+        "excerpt": "router.delete('/orders/:id', (req, res) => {\n    if (!store.delete(req.params.id)) {\n      res.status(404).json({ error: 'order not found' });\n      return;\n    }\n    res.status(204).end();\n  });"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [16, 21],
+        "excerpt": "## Orders\n\n- `POST /orders` …\n- `GET /orders/:id` …\n- Every endpoint is described in `openapi.yaml` and covered by a test in `test/`."
+      },
+      "explanation": "The spec lists exactly two endpoints (POST /orders and GET /orders/:id) and explicitly requires every endpoint to be described in openapi.yaml and covered by a test. DELETE /orders/:id appears in neither the spec nor openapi.yaml, and no test exercises it.",
+      "truth": "ask",
+      "proposal": {
+        "action": "update_spec",
+        "summary": "Add DELETE /orders/:id to docs/SPEC.md under the Orders section and add a corresponding path/operation to openapi.yaml (with 204 and 404 responses)."
+      },
+      "confidence": 1.0
+    },
+    {
+      "id": "KRS-004",
+      "type": "MISSING_TEST",
+      "severity": "medium",
+      "title": "DELETE /orders/:id has no test coverage",
+      "code": {
+        "file": "src/routes/orders.ts",
+        "lines": [37, 43],
+        "excerpt": "router.delete('/orders/:id', (req, res) => { … res.status(204).end(); });"
+      },
+      "intent": {
+        "file": "docs/SPEC.md",
+        "lines": [21, 21],
+        "excerpt": "Every endpoint is described in `openapi.yaml` and covered by a test in `test/`."
+      },
+      "explanation": "The spec mandates test coverage for every endpoint. test/orders.test.ts contains no test case for DELETE /orders/:id — neither the 204 success path nor the 404 not-found path is exercised.",
+      "truth": "intent",
+      "proposal": {
+        "action": "add_test",
+        "summary": "Add at least two test cases in test/orders.test.ts: one that deletes an existing order and asserts 204, and one that deletes a non-existent order and asserts 404."
+      },
+      "confidence": 1.0
+    }
+  ],
+  "summary": "Four divergences found: the discount rate was raised from 10% to 15% without the Finance-mandated spec update (high); README and SPEC still document the old DB_URL variable name (high); the new DELETE endpoint is absent from both the spec and openapi.yaml (medium); and that same endpoint has no test, violating the spec's explicit coverage requirement (medium)."
+}
+```

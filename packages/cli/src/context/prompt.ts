@@ -65,7 +65,8 @@ export function buildPrompt({ diff, selection, outputSchema }: PromptInput): str
     [
       TASK,
       '## Change under review',
-      `Base: \`${diff.base}\` · Head: \`${diff.head.slice(0, 12)}\``,
+      // No head sha: the prompt depends only on the change, so cache and fixtures survive rebases.
+      `Base: \`${diff.base}\``,
       `Changed files:\n${files.join('\n') || '- (none)'}`,
       `Changed symbols:\n${symbols.join('\n') || '- (none detected)'}`,
       fence(diff.raw.trimEnd(), 'diff'),
