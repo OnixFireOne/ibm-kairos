@@ -10,7 +10,7 @@ Updated: 2026-09-26 ~23:00 Astana, T12 assets done except the video and the PR c
 T12, parts that need the user.
 
 ## Next step
-1. PR comment evidence: push a copy of the demo (after `reset.sh` + drifts A/B/C) to a new public GitHub repo with the workflow from `demo/orders-api/.github/workflows/kairos.yml`, open a PR `feature/orders-update` → `main`, screenshot the Kairos comment (for the video).
+1. Done: PR comment verified on https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2 (4 findings, red check). Local copy: `../kairos-demo-pr`. Don't merge PR #2: it is the video shot.
 2. Record the video by `docs/video-script.md` (rehearse on mock; live Bob ≈0.7 Bobcoins), upload, put the URL into `docs/submission.md`.
 3. Fill the lablab form from `docs/submission.md`, final secret check of the repo, mark T12 `[x]`.
 

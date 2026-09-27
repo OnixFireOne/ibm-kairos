@@ -24,4 +24,4 @@ Run `kairos check` where drift should be caught without anyone remembering to: b
 ## Result
 - `test/hook.test.ts` (8 tests): hook content, install/idempotent/update, foreign hook kept, uninstall, no git repo, and the installed hook run with `sh` against a fake kairos (exit 0 → push, 1 → blocked, 2 → warn + push). 150 tests green, lint clean.
 - Smoke on the demo (built CLI, mock): `hook install --engine mock`, drifts A/B/C, `git push` to a local bare remote → 4 findings, "push blocked", exit 1; `hook uninstall` removes it.
-- GitHub CI run 36256696762 on `8e6f421`: `test` and `action-demo` green (the Action built Kairos, found drift on the demo, exit-code 1). The PR comment path is not exercised yet: needs a real PR (candidate for the video).
+- GitHub CI run 36256696762 on `8e6f421`: `test` and `action-demo` green (the Action built Kairos, found drift on the demo, exit-code 1). PR comment verified on a real PR (T12): https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2, run 36307903183 and the re-run after the base fix: one comment created, then updated in place with 4 findings; check red (drift blocks the merge).

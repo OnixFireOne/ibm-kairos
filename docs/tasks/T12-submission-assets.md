@@ -19,4 +19,5 @@ Everything the lablab.ai submission needs: README that sells and explains, slide
 
 ## Result
 - Done: README, cover, timeline screenshot, slides PDF, video script, submission texts. `pnpm test` + lint green.
-- Left (user): PR comment of the Action on a real PR (push a copy of the demo to a GitHub repo, open a PR with drifts A/B/C), record and upload the video, fill the lablab form, final secret check.
+- PR comment verified: demo repo https://github.com/OnixFireOne/kairos-demo-orders-api (built with `KAIROS_DEMO_DIR=../kairos-demo-pr demo/scripts/reset.sh` + drifts A/B/C), PR #2 → Kairos comment with 4 findings, red check. Found and fixed a base-ref bug on the way (see T10 Problems).
+- Left (user): record and upload the video, fill the lablab form, final secret check.
