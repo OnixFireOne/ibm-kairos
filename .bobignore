@@ -1,0 +1,12 @@
+# Keep secrets and bulky generated files out of Bob's context.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+node_modules/
+dist/
+coverage/
+.kairos/cache/
+.kairos/runs/
+demo/.work/
