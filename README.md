@@ -55,6 +55,13 @@ Full Markdown report (the same text becomes the PR comment): [demo/sample-report
 
 *The timeline of that run. #1: four drifts. Each `kairos fix` commits and re-checks. After fix B, Bob noticed its own new DELETE route returns a JSON 404 body that openapi.yaml does not declare: a `low` finding, below `failOn`, so the check passes and the finding stays visible.*
 
+### On a pull request
+
+The GitHub Action posts the same report on the PR ([live example](https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2)) and, with the check marked as required, blocks the merge:
+
+<p align="center"><img src="docs/assets/pr-comment.png" alt="Kairos drift report posted as a PR comment" width="760"></p>
+<p align="center"><img src="docs/assets/pr-blocked.png" alt="Required Kairos check failing, merge blocked" width="760"></p>
+
 ## What's in the box
 
 | Command | What it does |
@@ -153,6 +160,8 @@ kairos hook install          # optional: check before every push
 ```
 
 On GitHub, copy [demo/orders-api/.github/workflows/kairos.yml](demo/orders-api/.github/workflows/kairos.yml) (`uses: OnixFireOne/ibm-kairos@main`, `fetch-depth: 0`, `pull-requests: write`). It defaults to `engine: mock`; for live Bob install Bob Shell in an earlier step and set `engine: bob` and `bob-api-key: ${{ secrets.BOB_API_KEY }}`.
+
+The check reports drift; blocking is a repository policy that a workflow cannot set for itself. To block merges on drift, mark the `kairos` check as required: Settings → Branches (or Rules → Rulesets) → rule for `main` → *Require status checks to pass* → `kairos`.
 
 ## Limitations and what's next
 
