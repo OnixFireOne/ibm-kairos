@@ -153,7 +153,16 @@ TypeScript (strict), Node 20+, `commander`, `zod`, `execa`, `fast-glob`, `yaml`;
 
 ## Use it in your repo
 
+Kairos is not on npm yet; build it from this repo once (Node 20+), then run it inside your project:
+
 ```bash
+git clone https://github.com/OnixFireOne/ibm-kairos && cd ibm-kairos
+corepack enable && pnpm install && pnpm build
+alias kairos="node $PWD/packages/cli/dist/index.js"   # add to ~/.zshrc to keep it
+```
+
+```bash
+cd <your-repo>
 kairos init                  # config, Bob modes, docs/kairos/, agent pointers, post-commit hook
 # edit .kairos/config.yaml: base branch, intent globs, section map, failOn, cost caps
 kairos check                 # needs Bob Shell (`bob`) and BOB_API_KEY (Inference scope) for headless runs
