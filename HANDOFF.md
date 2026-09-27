@@ -1,6 +1,6 @@
 # Handoff
 
-Updated: 2026-09-27 ~17:40 Astana. **Submitted to lablab.ai.** All tasks T0–T15 done (T15 live Bob progress, merged after the submission, before the deadline). Deadline was Sun Sep 27 15:00 UTC (20:00 Astana).
+Updated: 2026-09-27 ~17:40 Astana. **Submitted to lablab.ai.** All tasks T0–T16 done (T15 live Bob progress, T16 `kairos doctor`: merged after the submission, before the deadline). Deadline was Sun Sep 27 15:00 UTC (20:00 Astana).
 
 ## State
 - Done: T0–T14 (details: `PLAN.md` and `docs/tasks/`). T12: README, `docs/assets/{cover,timeline}.png`, `docs/slides.pdf`, `docs/video-script.md`, `docs/submission.md` (form texts), video `../shots/video/kairos-demo.mp4`. See `docs/tasks/T12-submission-assets.md`.

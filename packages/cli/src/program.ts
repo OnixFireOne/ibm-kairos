@@ -3,7 +3,7 @@ import { registerCheck } from './commands/check.js';
 import { registerFix } from './commands/fix.js';
 import { registerHandoff } from './commands/handoff.js';
 import { registerHook } from './commands/hook.js';
-import { registerInit } from './commands/init.js';
+import { registerDoctor, registerInit } from './commands/init.js';
 import { registerProgress } from './commands/progress.js';
 import { registerReport } from './commands/report.js';
 import { registerSession } from './commands/session.js';
@@ -16,6 +16,7 @@ export function createProgram(): Command {
     .description('Catch the moment code drifts from intent. Powered by IBM Bob.')
     .version(VERSION);
   registerInit(program);
+  registerDoctor(program);
   registerCheck(program);
   registerFix(program);
   registerReport(program);

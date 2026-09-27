@@ -2,6 +2,7 @@ import { chmod, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import type { Command } from 'commander';
 import { CONFIG_PATH } from '../config/load.js';
+import { checkEnvironment, formatEnvChecks } from './doctor.js';
 import { BOB_MODES_TEMPLATE } from '../templates/bob-modes.js';
 import { CONFIG_TEMPLATE } from '../templates/config.js';
 import {
@@ -101,5 +102,17 @@ export function registerInit(program: Command): void {
       for (const f of created) console.log(`created  ${f}`);
       for (const f of updated) console.log(`updated  ${f}`);
       for (const f of skipped) console.log(`exists   ${f} (use --force to overwrite)`);
+      console.log(`\n${formatEnvChecks(await checkEnvironment())}`);
+    });
+}
+
+export function registerDoctor(program: Command): void {
+  program
+    .command('doctor')
+    .description('Check what live IBM Bob runs need: Bob Shell on PATH and BOB_API_KEY')
+    .action(async () => {
+      const checks = await checkEnvironment();
+      console.log(formatEnvChecks(checks));
+      if (!checks.every((c) => c.ok)) process.exitCode = 1;
     });
 }

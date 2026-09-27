@@ -67,6 +67,7 @@ The GitHub Action posts the same report on the PR ([live example](https://github
 | Command | What it does |
 |---|---|
 | `kairos init` | `.kairos/config.yaml`, the Bob custom modes, `docs/kairos/` living docs, pointers in `CLAUDE.md`/`AGENTS.md`, a `post-commit` hook |
+| `kairos doctor` | checks that live runs can work: IBM Bob Shell on PATH and `BOB_API_KEY` set (also printed at the end of `init`) |
 | `kairos check` | diff → intent context → Bob → Drift Report (terminal, `kairos-report.md`, `.kairos/history/*.json`); exit 1 at or above `failOn` |
 | `kairos fix --id <ID>` | Bob resolves one finding (`--truth intent\|code`; docs and tests only unless `--allow-code`), you confirm the diff, Kairos commits, logs the decision and re-checks |
 | `kairos report [--html]` | drift history; `--html` writes a single self-contained timeline page (no scripts, opens offline) |
@@ -163,7 +164,8 @@ alias kairos="node $PWD/packages/cli/dist/index.js"   # add to ~/.zshrc to keep 
 
 ```bash
 cd <your-repo>
-kairos init                  # config, Bob modes, docs/kairos/, agent pointers, post-commit hook
+kairos init                  # config, Bob modes, docs/kairos/, agent pointers, post-commit hook; then checks Bob Shell + BOB_API_KEY
+kairos doctor                # re-check the environment any time (exit 1 if something is missing)
 # edit .kairos/config.yaml: base branch, intent globs, section map, failOn, cost caps
 kairos check                 # needs Bob Shell (`bob`) and BOB_API_KEY (Inference scope) for headless runs
 kairos hook install          # optional: check before every push
