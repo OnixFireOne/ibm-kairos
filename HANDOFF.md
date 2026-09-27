@@ -1,34 +1,28 @@
 # Handoff
 
-Updated: 2026-09-27 ~17:40 Astana. **Submitted to lablab.ai.** All tasks T0–T16 done (T15 live Bob progress, T16 `kairos doctor`: merged after the submission, before the deadline). Deadline was Sun Sep 27 15:00 UTC (20:00 Astana).
+Updated: 2026-09-27 18:40 Astana. **Submitted to lablab.ai** (deadline was 15:00 UTC = 20:00 Astana). Waiting for judging.
 
 ## State
-- Done: T0–T14 (details: `PLAN.md` and `docs/tasks/`). T12: README, `docs/assets/{cover,timeline}.png`, `docs/slides.pdf`, `docs/video-script.md`, `docs/submission.md` (form texts), video `../shots/video/kairos-demo.mp4`. See `docs/tasks/T12-submission-assets.md`.
-- 161 tests green, lint clean. Bobcoins spent: 6.38 / 40 (incl. video tasks 14–15 and stream probes 16–17; the submitted slides say 6.26) (details: `bob_sessions/README.md`).
+- Done: T0–T16 (`PLAN.md`, `docs/tasks/`). After the submission and before the deadline: T15 live Bob progress (`stream-json`, TTY status line), T16 `kairos doctor` + environment check at the end of `init`.
+- Submission assets: `docs/submission.md` (form texts), `docs/slides.pdf`, `docs/assets/cover.png`, video `../shots/video/kairos-demo.mp4` (built by `scripts/video/`, the video predates T15).
+- 170 tests green, lint clean, CI green on `main`.
+- Bobcoins: 6.38 / 40 (`bob_sessions/README.md`; the submitted slides and form say 6.26). 15 Bob IDE screenshots; tasks 14–15 (video rehearsal and take) have raw logs only.
 
 ## In progress
-Nothing. The project is submitted.
+Nothing.
 
 ## Next step
-None before judging. Don't merge demo PR #2 (https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2): it is linked from the submission as the live example. Keep the repo public and unchanged until results.
+None until results. Don't merge demo PR https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2 (the live example in the submission); keep both repos public. After judging, ideas from README "what's next": publish to npm, IDE nudges, Bob subagents, more languages.
 
 ## Gotchas
-- Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).
-- When suggesting a new chat, give a first message naming the next task (e.g. «Продолжай T6: команда check + отчёт») so the chat title is meaningful.
-- Never run real `bob` unless asked. Run Bob tasks with `zsh -ic 'scripts/bob-task.sh <taskNN-name> <prompt-file> [mode] [maxCost] [maxTurns]'` (the key lives in `~/.zshrc`; plain shells don't see it). Never print/commit the key.
-- Bob works tests-first: Claude writes contract + fixtures + red tests, Bob implements. Double-check every expected value against fixtures first (task 03 burnt 2.08 on a wrong expectation). Tell Bob to run only the target test file while iterating.
-- Screenshots (required evidence, only for tasks Bob ran): after each Bob run, remind the user in chat with the task number, prompt title and `task_id` (Bob IDE → Tasks → All → open the task → click its header). The user drops the PNG into `../shots/`; view it, check task id and that no secrets are visible, move it to `bob_sessions/kairos_taskNN_<desc>.png` (glob the filename: macOS uses a special space), add/link its row in `bob_sessions/README.md`, commit. Next Bob task number: 18. Tell the user not to press "Continue Task" on capped tasks. Runs made by `kairos check`/`fix` on the demo appear in Bob IDE under the `orders-api` workspace, not `ibm-kairos`.
-- Everything in the repo is English (judges). Chat with the user in Russian.
-- Bob CLI flag is `--mode`, not `--chat-mode`.
-- Never run `demo/scripts/reset.sh` before copying `demo/.work/orders-api/.kairos/runs/` of real runs into `bob_sessions/cli/` (reset deletes them; Bob Shell's own logs in `~/.bob/logs/shell/` are the backup).
-- The built-in browser can't screenshot `file://` pages: serve the HTML with `python3 -m http.server` and open localhost.
-- `gh` is not installed locally; check CI via `curl https://api.github.com/repos/OnixFireOne/ibm-kairos/actions/runs?per_page=1`.
-- Run prettier from the repo root only (from `packages/cli` it misses `.prettierignore` and rewrites `.md` snapshots).
-- `pnpm test` must stay green at every commit, so tests + implementation land together. Before committing run root `pnpm lint` (tsc + prettier), not only `tsc`.
+- Never run real `bob` unless asked; with the key use `zsh -ic` (the key lives in `~/.zshrc`). Never print or commit it.
+- Bob evidence: after each Bob run, give the user the task number and `task_id` for a Bob IDE screenshot (`orders-api` workspace for runs on the demo); file it as `bob_sessions/kairos_taskNN_<desc>.png` + a row in `bob_sessions/README.md`. Next Bob task number: 18.
+- Copy `.kairos/runs/` of real runs into `bob_sessions/cli/` before `demo/scripts/reset.sh` (reset deletes them).
+- Live Bob is not deterministic: finding count and ids vary between runs (see T12).
+- Intel Mac: Homebrew builds ffmpeg from source (too slow); video is assembled with AVFoundation (`scripts/video/`).
+- `gh` is not installed; check CI with `curl https://api.github.com/repos/OnixFireOne/ibm-kairos/actions/runs?per_page=1`.
+- Run prettier and `pnpm lint` from the repo root; `pnpm test` green at every commit.
+- Repo in English; chat with the user in Russian. Delegate to Codex only when cheaper (`CLAUDE.md`).
 
 ## Read first
-`CLAUDE.md`, this file, the current task file in `docs/tasks/`, `PLAN.md` (statuses). `SPEC.md` only the sections the task needs (§6 architecture). Past task files only when touching that module.
-- Every task: create/update its `docs/tasks/TNN-*.md` (spec, decisions, problems, result); keep `SPEC.md` for the stable product picture.
-
-## Last check
-Real `kairos check` on the demo (Bob task 04): 4 findings for A/B/C, exit 1, 0.091 Bobcoins; control (task 05) clean. Sample: `demo/sample-report.md`.
+`CLAUDE.md`, this file, `PLAN.md`, then only the task file and `SPEC.md` sections the work needs.
