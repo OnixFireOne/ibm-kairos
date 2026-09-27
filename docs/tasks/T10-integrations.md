@@ -18,6 +18,7 @@ Run `kairos check` where drift should be caught without anyone remembering to: b
 - **Demo workflow lives in `demo/orders-api/.github/`** (the demo repo root), not `demo/.github/`: `reset.sh` copies it into the demo repo baseline. The demo fixtures still match (the workflow is neither in the diff nor in the intent globs).
 
 ## Problems
+- First real PR (`OnixFireOne/kairos-demo-orders-api`, T12): the comment was posted, but the mock found no fixture. The prompt contained the base ref, `main` locally vs `origin/main` on a PR, so its hash differed. The prompt now drops the `origin/` prefix (test in `prompt.test.ts`); fixtures and the Bob cache match in both places. Also: Actions were disabled on that new repo until enabled in its Actions tab.
 - YAML plain scalars with `: ` inside backticks (`engine: bob`) are parse errors; quoted the descriptions.
 
 ## Result

@@ -67,4 +67,13 @@ describe('buildPrompt', () => {
     });
     expect(prompt).toContain('No intent excerpts matched this change.');
   });
+
+  it('is the same for a local base and its origin/ ref, so fixtures match in CI', async () => {
+    const render = async (base: string) =>
+      buildPrompt({ diff: { ...(await driftDiff()), base }, selection, outputSchema: '{}' });
+    const local = await render('main');
+    expect(local).toContain('Base: `main`');
+    expect(await render('origin/main')).toBe(local);
+    expect(await render('refs/remotes/origin/main')).toBe(local);
+  });
 });

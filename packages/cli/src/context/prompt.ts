@@ -72,8 +72,9 @@ export function buildPrompt({
     [
       TASK,
       '## Change under review',
-      // No head sha: the prompt depends only on the change, so cache and fixtures survive rebases.
-      `Base: \`${diff.base}\``,
+      // No head sha and no remote prefix: the prompt depends only on the change, so cache and
+      // fixtures survive rebases and match between a local run (`main`) and CI (`origin/main`).
+      `Base: \`${diff.base.replace(/^(refs\/remotes\/)?origin\//, '')}\``,
       `Changed files:\n${files.join('\n') || '- (none)'}`,
       `Changed symbols:\n${symbols.join('\n') || '- (none detected)'}`,
       fence(diff.raw.trimEnd(), 'diff'),

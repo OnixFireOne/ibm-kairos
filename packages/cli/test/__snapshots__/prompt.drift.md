@@ -13,7 +13,7 @@ Rules:
 
 ## Change under review
 
-Base: `origin/main`
+Base: `main`
 
 Changed files:
 - logo.png (modified, binary)
