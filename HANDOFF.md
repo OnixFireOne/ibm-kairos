@@ -1,17 +1,17 @@
 # Handoff
 
-Updated: 2026-09-27 ~15:20 Astana, T12: live-Bob video rehearsal done, script cut to ≤3:00. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-27 ~17:15 Astana, T12: video done; only the lablab form is left. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
 - Done: T0–T11, T13, T14 (details: `PLAN.md` and `docs/tasks/`). T12 `[~]`: README rewritten, `docs/assets/{cover,timeline}.png`, `docs/slides.pdf`, `docs/video-script.md`, `docs/submission.md` (form texts). See `docs/tasks/T12-submission-assets.md`.
-- 161 tests green, lint clean. Bobcoins spent: 5.90 / 40 (4.85 + 1.05 video rehearsal, task 14) (details: `bob_sessions/README.md`).
+- 161 tests green, lint clean. Bobcoins spent: 6.26 / 40 (incl. video rehearsal task 14 and take task 15) (details: `bob_sessions/README.md`).
 
 ## In progress
 T12, parts that need the user.
 
 ## Next step
 1. Done: PR comment verified on https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2 (4 findings, red check). Local copy: `../kairos-demo-pr`. Don't merge PR #2: it is the video shot.
-2. Record the video by `docs/video-script.md` (≤3:00, one live check + one live fix of A, ≈0.3 Bobcoins per take; demo repo is ready at `/tmp/k/orders-api`), upload, put the URL into `docs/submission.md`. Then update the Bobcoin total (4.85 in README metrics, `docs/slides.html` + regenerate PDF, `docs/submission.md`) and add the take as Bob task 15 in `bob_sessions/README.md` (copy `.kairos/runs/` first).
+2. Done: video `../shots/video/kairos-demo.mp4` (2:25), assembled by `scripts/video/`. Totals updated to 6.26.
 3. Fill the lablab form from `docs/submission.md`, final secret check of the repo, mark T12 `[x]`.
 
 ## Gotchas

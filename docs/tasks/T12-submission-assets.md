@@ -26,3 +26,8 @@ Everything the lablab.ai submission needs: README that sells and explains, slide
 - Full live chain on `/tmp/k/orders-api` (Bob task 14, raw outputs `bob_sessions/cli/20260927T10*-task14-video-rehearsal.json`, 9 runs, 1.049 Bobcoins): check 41 s, 6 findings (Bob split C into README + SPEC and B into SPEC + openapi + test); every fix resolved its finding; A (`--truth intent --allow-code`) was `KRS-001` and fixed first try.
 - Live runs are not deterministic: finding count and ids change between runs, and the final re-check flagged a new medium MISSING_TEST in Bob's own test for B (no GET after DELETE), so the chain needs one more fix to go green. Not a Kairos bug, but unsuitable for a scripted video.
 - **Decision:** the video limit is 3 minutes, so the script was cut to 2:50 with one live check and one live fix (A, stable id and outcome); the PR and the timeline are shown as ready assets. ≈0.3 Bobcoins per take.
+
+## Video (Sep 27)
+- Voice: Google AI Studio TTS (Gemini 3.8), five blocks from `docs/video-narration.md`. Screen: QuickTime recordings of a live check + fix of A (Bob task 15, 0.36 Bobcoins).
+- Homebrew builds ffmpeg from source on this Intel Mac (too slow before the deadline), so the video is assembled with AVFoundation in `scripts/video/build.swift`: stills + clips with Bob's wait sped up + voice tracks. Result 2:25, 92 s of the product in action (rules: ≤ 3:00, ≥ 90 s).
+- Bobcoin total after the video: 6.26 / 40 (README, slides, submission updated; slides PDF regenerated).

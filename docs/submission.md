@@ -19,7 +19,7 @@ Kairos is for development teams whose services are described by specs, API contr
 
 Kairos also keeps the docs themselves alive. `kairos init` gives a project living docs (SPEC, PLAN, PROGRESS, DECISIONS, per-task files and a HANDOFF note) plus pointers that make Bob, Claude Code and Codex read the handoff first, so a new chat continues from "continue". Kairos itself was built this way.
 
-Measured on the demo with real IBM Bob: 3/3 seeded drifts caught, 0 false positives on a control commit, 20–35 s and 0.03–0.18 Bobcoins per check (0 for a cached rerun), each fix in 11–28 s, the whole loop from detection to a passing check in 5.5 minutes for 1.12 Bobcoins. The whole hackathon used 4.85 of 40 Bobcoins.
+Measured on the demo with real IBM Bob: 3/3 seeded drifts caught, 0 false positives on a control commit, 20–35 s and 0.03–0.18 Bobcoins per check (0 for a cached rerun), each fix in 11–28 s, the whole loop from detection to a passing check in 5.5 minutes for 1.12 Bobcoins. The whole hackathon used 6.26 of 40 Bobcoins.
 
 ## IBM Bob Usage Statement
 IBM Bob is both the runtime engine of Kairos and a developer on its team.
@@ -52,7 +52,7 @@ IBM Bob, Bob Shell, Bob IDE, custom modes, TypeScript, Node.js, GitHub Actions, 
 | Repository | https://github.com/OnixFireOne/ibm-kairos (public, MIT) |
 | Cover (16:9) | [assets/cover.png](assets/cover.png) (source: [assets/cover.html](assets/cover.html)) |
 | Slides (PDF) | [slides.pdf](slides.pdf) (source: [slides.html](slides.html)) |
-| Video | _todo: MP4 upload, ≤ 3:00, ≥ 90 s of the product in action_ (script: [video-script.md](video-script.md)) |
+| Video | MP4 upload `kairos-demo.mp4` (2:25, 92 s of the live product; built by [../scripts/video/](../scripts/video/README.md)) (script: [video-script.md](video-script.md)) |
 | Bob evidence | [../bob_sessions/](../bob_sessions/README.md) |
 | Team | [../brand/team_description.md](../brand/team_description.md) |
 

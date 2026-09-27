@@ -109,7 +109,7 @@ Evidence of every Bob task (screenshots of the consumption summaries, raw JSON a
 | Time to resolve a drift with `kairos fix` | C (README + SPEC): **11 s**, 0.058 · B (SPEC + OpenAPI + 2 tests): **26 s**, 0.138 · A (code + 3 test expectations): **28 s**, 0.221 |
 | Whole loop: check → 3 fixes → re-checks → pass | **5.5 min** wall clock including human confirmations and one capped retry, **1.12 Bobcoins** |
 | Session restart cost (this repo) | `HANDOFF.md` (3.8k chars) + one task file (2–4k) instead of SPEC + PLAN + all task files (~70k chars) |
-| Total Bobcoins for the whole hackathon | **4.85 / 40** |
+| Total Bobcoins for the whole hackathon | **6.26 / 40** |
 
 Sources: Bob tasks 04–13 in [bob_sessions/README.md](bob_sessions/README.md) (durations from the Bob Shell logs). We did not time a manual fix with a stopwatch, so there is no manual baseline in this table.
 
