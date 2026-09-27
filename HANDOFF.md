@@ -1,18 +1,16 @@
 # Handoff
 
-Updated: 2026-09-27 ~17:15 Astana, T12: video done; only the lablab form is left. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
+Updated: 2026-09-27 ~17:40 Astana. **Submitted to lablab.ai.** All tasks T0–T14 done. Deadline: Sun Sep 27 15:00 UTC (submit by 17:00 Astana).
 
 ## State
 - Done: T0–T11, T13, T14 (details: `PLAN.md` and `docs/tasks/`). T12 `[~]`: README rewritten, `docs/assets/{cover,timeline}.png`, `docs/slides.pdf`, `docs/video-script.md`, `docs/submission.md` (form texts). See `docs/tasks/T12-submission-assets.md`.
 - 161 tests green, lint clean. Bobcoins spent: 6.26 / 40 (incl. video rehearsal task 14 and take task 15) (details: `bob_sessions/README.md`).
 
 ## In progress
-T12, parts that need the user.
+Nothing. The project is submitted.
 
 ## Next step
-1. Done: PR comment verified on https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2 (4 findings, red check). Local copy: `../kairos-demo-pr`. Don't merge PR #2: it is the video shot.
-2. Done: video `../shots/video/kairos-demo.mp4` (2:25), assembled by `scripts/video/`. Totals updated to 6.26.
-3. Fill the lablab form from `docs/submission.md`, final secret check of the repo, mark T12 `[x]`.
+None before judging. Don't merge demo PR #2 (https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2): it is linked from the submission as the live example. Keep the repo public and unchanged until results.
 
 ## Gotchas
 - Delegate sizable implementation to Codex only when cheaper than doing it in Claude (see `CLAUDE.md` rules): Claude Code writes contract + red tests, Codex makes them green, Claude reviews and commits. Run it directly: `zsh -ic 'codex exec -s workspace-write "<prompt>"'` (no bridge needed; Codex 0.155 verified).

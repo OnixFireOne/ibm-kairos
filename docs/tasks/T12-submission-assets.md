@@ -1,5 +1,5 @@
 # T12 Submission assets
-Status: [~] in progress · Owner: Claude Code (+ user: video, PR, form) · Commits: see `git log --grep T12`
+Status: [x] done · Owner: Claude Code (+ user: video, PR, form) · Commits: see `git log --grep T12`
 
 ## Goal
 Everything the lablab.ai submission needs: README that sells and explains, slides (PDF), video script, 16:9 cover, form texts, real numbers in the metrics table.
@@ -31,3 +31,6 @@ Everything the lablab.ai submission needs: README that sells and explains, slide
 - Voice: Google AI Studio TTS (Gemini 3.8), five blocks from `docs/video-narration.md`. Screen: QuickTime recordings of a live check + fix of A (Bob task 15, 0.36 Bobcoins).
 - Homebrew builds ffmpeg from source on this Intel Mac (too slow before the deadline), so the video is assembled with AVFoundation in `scripts/video/build.swift`: stills + clips with Bob's wait sped up + voice tracks. Result 2:25, 92 s of the product in action (rules: ≤ 3:00, ≥ 90 s).
 - Bobcoin total after the video: 6.26 / 40 (README, slides, submission updated; slides PDF regenerated).
+
+## Submission
+Submitted on lablab.ai on Sep 27 (~17:40 Astana, before the 20:00 deadline).
