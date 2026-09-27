@@ -57,6 +57,51 @@ describe('parseBobOutput', () => {
   });
 });
 
+describe('parseBobOutput with --format stream-json', () => {
+  const ev = (o: Record<string, unknown>) => JSON.stringify(o);
+  const stream = [
+    ev({ type: 'message', role: 'user', content: 'PROMPT' }),
+    ev({ type: 'message', role: 'assistant', content: 'Let me read ' }),
+    ev({ type: 'message', role: 'assistant', content: 'the spec.' }),
+    ev({ type: 'tool_use', tool_name: 'read_file', parameters: { path: '/r/docs/SPEC.md' } }),
+    ev({ type: 'tool_result', status: 'success', output: '...' }),
+    ev({ type: 'message', role: 'assistant', content: '{"findings":[],' }),
+    ev({ type: 'message', role: 'assistant', content: '"summary":"No drift."}' }),
+    ev({
+      type: 'result',
+      status: 'success',
+      stats: { task_id: 't-9', session_costs: 0.02, tool_calls: 1 },
+    }),
+  ].join('\n');
+
+  it('assembles the reply from the assistant chunks after the last tool call', () => {
+    const out = parseBobOutput(stream);
+    expect(out.result?.last_message).toBe(REPLY);
+    expect(out.result?.stats?.task_id).toBe('t-9');
+  });
+
+  it('feeds each stream event to the progress sink while bob runs', async () => {
+    const cwd = await tmp();
+    const exec = vi.fn<Exec>(async (_f, _a, opts) => {
+      for (const line of stream.split('\n')) opts.onLine?.(line);
+      return { stdout: stream, stderr: '', exitCode: 0 };
+    });
+    const seen: string[] = [];
+    const engine = new BobEngine({
+      cwd,
+      maxCost: 1,
+      maxTurns: 4,
+      env: { BOB_API_KEY: 'test' },
+      exec,
+      progress: (e) => seen.push(String(e.type)),
+    });
+    const res = await engine.analyze('PROMPT');
+    expect(res.text).toBe(REPLY);
+    expect(seen).toContain('tool_use');
+    expect(seen.at(-1)).toBe('result');
+  });
+});
+
 describe('BobEngine', () => {
   it('runs bob in the kairos mode with the budget, prompt on stdin', async () => {
     const cwd = await tmp();
@@ -71,7 +116,7 @@ describe('BobEngine', () => {
       '--mode',
       'kairos',
       '--format',
-      'json',
+      'stream-json',
       '--max-cost',
       '2',
       '--max-turns',

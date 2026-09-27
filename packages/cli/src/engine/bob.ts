@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { execa } from 'execa';
+import { type BobEvent, type ProgressSink, ttyProgress } from './progress.js';
 import {
   type AnalyzeOptions,
   type Engine,
@@ -23,11 +24,25 @@ export interface ExecResult {
 export type Exec = (
   file: string,
   args: string[],
-  opts: { input: string; cwd: string; timeoutMs: number; env: NodeJS.ProcessEnv },
+  opts: {
+    input: string;
+    cwd: string;
+    timeoutMs: number;
+    env: NodeJS.ProcessEnv;
+    /** Called with each complete stdout line as it arrives. */
+    onLine?: (line: string) => void;
+  },
 ) => Promise<ExecResult>;
 
-const defaultExec: Exec = async (file, args, { input, cwd, timeoutMs, env }) => {
-  const res = await execa(file, args, { input, cwd, env, timeout: timeoutMs, reject: false });
+const defaultExec: Exec = async (file, args, { input, cwd, timeoutMs, env, onLine }) => {
+  const sub = execa(file, args, { input, cwd, env, timeout: timeoutMs, reject: false });
+  let pending = '';
+  sub.stdout?.on('data', (chunk: Buffer) => {
+    const lines = (pending + chunk.toString()).split('\n');
+    pending = lines.pop() ?? '';
+    for (const line of lines) onLine?.(line);
+  });
+  const res = await sub;
   return {
     stdout: String(res.stdout ?? ''),
     stderr: String(res.stderr ?? ''),
@@ -47,6 +62,8 @@ export interface BobEngineOptions {
   env?: NodeJS.ProcessEnv;
   exec?: Exec;
   now?: () => Date;
+  /** Receives stream events while Bob works. Default: a live status line when stderr is a TTY. */
+  progress?: ProgressSink | false;
 }
 
 interface BobResultLine {
@@ -56,26 +73,41 @@ interface BobResultLine {
   last_message?: string;
 }
 
-/** Splits `bob run --format json` output (one JSON object per line) into error lines and the result. */
+/**
+ * Splits `bob run` output (one JSON object per line) into error lines and the result.
+ * `--format json` puts the reply in `result.last_message`; `--format stream-json` streams it as
+ * assistant `message` chunks, so the reply is the text after the last tool call.
+ */
 export function parseBobOutput(stdout: string): { errors: string[]; result?: BobResultLine } {
   const errors: string[] = [];
   let result: BobResultLine | undefined;
+  let reply = '';
   for (const line of stdout.split('\n')) {
-    let event: { type?: string; message?: string };
+    let event: BobEvent & { message?: string; content?: unknown };
     try {
       event = JSON.parse(line);
     } catch {
       continue; // banners, blank lines
     }
     if (event?.type === 'error') errors.push(String(event.message ?? 'unknown error'));
+    if (event?.type === 'tool_use') reply = '';
+    if (
+      event?.type === 'message' &&
+      event.role === 'assistant' &&
+      typeof event.content === 'string'
+    ) {
+      reply += event.content;
+    }
     if (event?.type === 'result') result = event as BobResultLine;
   }
+  if (result && result.last_message === undefined && reply)
+    result = { ...result, last_message: reply };
   return { errors, result };
 }
 
 const tail = (text: string, n = 500) => (text.length > n ? `…${text.slice(-n)}` : text).trim();
 
-/** Runs prompts through IBM Bob Shell: `bob run --mode kairos --format json`. */
+/** Runs prompts through IBM Bob Shell: `bob run --mode kairos --format stream-json`. */
 export class BobEngine implements Engine {
   readonly name = 'bob';
   constructor(private readonly o: BobEngineOptions) {}
@@ -95,19 +127,39 @@ export class BobEngine implements Engine {
       '--mode',
       this.o.mode ?? 'kairos',
       '--format',
-      'json',
+      'stream-json',
       '--max-cost',
       String(this.o.maxCost),
       '--max-turns',
       String(this.o.maxTurns),
     ];
     const timeoutMs = this.o.timeoutMs ?? 10 * 60_000;
-    const res = await (this.o.exec ?? defaultExec)(bin, args, {
-      input: prompt,
-      cwd: this.o.cwd,
-      timeoutMs,
-      env,
-    });
+    const live =
+      this.o.progress === undefined && !this.o.exec && process.stderr.isTTY
+        ? ttyProgress(this.o.cwd)
+        : undefined;
+    const sink = this.o.progress || live?.sink;
+    const onLine = sink
+      ? (line: string) => {
+          try {
+            sink(JSON.parse(line) as BobEvent);
+          } catch {
+            // not an event
+          }
+        }
+      : undefined;
+    let res: ExecResult;
+    try {
+      res = await (this.o.exec ?? defaultExec)(bin, args, {
+        input: prompt,
+        cwd: this.o.cwd,
+        timeoutMs,
+        env,
+        onLine,
+      });
+    } finally {
+      live?.stop();
+    }
 
     if (res.code === 'ENOENT') {
       throw new EngineError(
