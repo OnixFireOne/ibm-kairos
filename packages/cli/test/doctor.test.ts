@@ -17,7 +17,9 @@ describe('checkEnvironment', () => {
     const checks = await checkEnvironment({ env: {}, bobVersion: async () => undefined });
     const text = formatEnvChecks(checks);
     expect(checks.map((c) => c.ok)).toEqual([false, false]);
-    expect(text).toContain('✗ IBM Bob Shell not found: install IBM Bob Shell');
+    expect(text).toContain(
+      '✗ IBM Bob Shell not found: install IBM Bob Shell (https://bob.ibm.com/docs/shell/getting-started/install-and-setup)',
+    );
     expect(text).toContain('✗ BOB_API_KEY is not set: create an IBM Bob API key');
     expect(text).toContain('never in .kairos/config.yaml');
     expect(text).toContain('kairos check --engine mock');

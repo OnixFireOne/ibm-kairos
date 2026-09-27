@@ -171,6 +171,8 @@ kairos check                 # needs Bob Shell (`bob`) and BOB_API_KEY (Inferenc
 kairos hook install          # optional: check before every push
 ```
 
+Live runs need [IBM Bob Shell](https://bob.ibm.com/docs/shell/getting-started/install-and-setup) on PATH and an IBM Bob API key with the Inference scope in `BOB_API_KEY` (shell profile or CI secret, never in the committed config). `kairos doctor` tells you what is missing.
+
 On GitHub, copy [demo/orders-api/.github/workflows/kairos.yml](demo/orders-api/.github/workflows/kairos.yml) (`uses: OnixFireOne/ibm-kairos@main`, `fetch-depth: 0`, `pull-requests: write`). It defaults to `engine: mock`; for live Bob install Bob Shell in an earlier step and set `engine: bob` and `bob-api-key: ${{ secrets.BOB_API_KEY }}`.
 
 The check reports drift; blocking is a repository policy that a workflow cannot set for itself. To block merges on drift, mark the `kairos` check as required: Settings → Branches (or Rules → Rulesets) → rule for `main` → *Require status checks to pass* → `kairos`.

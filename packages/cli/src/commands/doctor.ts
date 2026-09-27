@@ -32,7 +32,7 @@ export async function checkEnvironment(
       : {
           ok: false,
           label: 'IBM Bob Shell not found',
-          hint: `install IBM Bob Shell and make sure \`${bin}\` is on PATH`,
+          hint: `install IBM Bob Shell (https://bob.ibm.com/docs/shell/getting-started/install-and-setup) and make sure \`${bin}\` is on PATH`,
         },
     env.BOB_API_KEY
       ? { ok: true, label: 'BOB_API_KEY is set' }
