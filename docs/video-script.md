@@ -29,8 +29,8 @@ kairos fix --id KRS-001 --truth intent --allow-code      # A: the spec wins
 Point at the last re-check: "Bob even noticed its own new endpoint returns a JSON body on 404 that the contract doesn't declare. Low severity, below the threshold, so the check passes, but it stays visible."
 
 ## 4. Where it runs (2:05–2:35)
-**Screen:** GitHub PR with the Kairos comment; then `kairos report --html` in the browser.
-**Say:** "The same check runs as a pre-push hook and as a GitHub Action that posts the report on the pull request. The timeline shows every Kairos moment: when drift appeared and when it was resolved."
+**Screen:** https://github.com/OnixFireOne/kairos-demo-orders-api/pull/2: scroll slowly through the Kairos comment, stop on the red required check and the greyed-out Merge button; then `kairos report --html` in the browser.
+**Say:** "The same check runs as a pre-push hook and as a GitHub Action that posts the report on the pull request. Mark it as required, and drift blocks the merge. The timeline shows every Kairos moment: when drift appeared and when it was resolved."
 
 ## 5. Continuity (2:35–3:00)
 **Screen:** this repo: `HANDOFF.md`, `PLAN.md`, `docs/tasks/`; a new Claude Code chat with the single message "continue" picking up the next task.
