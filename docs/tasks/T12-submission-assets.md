@@ -21,3 +21,8 @@ Everything the lablab.ai submission needs: README that sells and explains, slide
 - Done: README, cover, timeline screenshot, slides PDF, video script, submission texts. `pnpm test` + lint green.
 - PR comment verified: demo repo https://github.com/OnixFireOne/kairos-demo-orders-api (built with `KAIROS_DEMO_DIR=../kairos-demo-pr demo/scripts/reset.sh` + drifts A/B/C), PR #2 → Kairos comment with 4 findings, red check. Found and fixed a base-ref bug on the way (see T10 Problems).
 - Left (user): record and upload the video, fill the lablab form, final secret check.
+
+## Video rehearsal on live Bob (Sep 27)
+- Full live chain on `/tmp/k/orders-api` (Bob task 14, raw outputs `bob_sessions/cli/20260927T10*-task14-video-rehearsal.json`, 9 runs, 1.049 Bobcoins): check 41 s, 6 findings (Bob split C into README + SPEC and B into SPEC + openapi + test); every fix resolved its finding; A (`--truth intent --allow-code`) was `KRS-001` and fixed first try.
+- Live runs are not deterministic: finding count and ids change between runs, and the final re-check flagged a new medium MISSING_TEST in Bob's own test for B (no GET after DELETE), so the chain needs one more fix to go green. Not a Kairos bug, but unsuitable for a scripted video.
+- **Decision:** the video limit is 3 minutes, so the script was cut to 2:50 with one live check and one live fix (A, stable id and outcome); the PR and the timeline are shown as ready assets. ≈0.3 Bobcoins per take.
